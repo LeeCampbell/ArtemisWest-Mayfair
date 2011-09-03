@@ -1,0 +1,1282 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ArtemisWest.Core</name>
+    </assembly>
+    <members>
+        <member name="T:ArtemisWest.StringTable">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:ArtemisWest.StringTable.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:ArtemisWest.StringTable.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:ArtemisWest.StringTable.Guard_ArgumentNotEmptyCollection">
+            <summary>
+              Looks up a localized string similar to Argument &apos;{0}&apos; cannot be an empty collection..
+            </summary>
+        </member>
+        <member name="P:ArtemisWest.StringTable.Guard_ArgumentNotEmptyString">
+            <summary>
+              Looks up a localized string similar to Argument &apos;{0}&apos; cannot be an empty string..
+            </summary>
+        </member>
+        <member name="P:ArtemisWest.StringTable.Guard_ArgumentNotKindUnspecified">
+            <summary>
+              Looks up a localized string similar to Argument &apos;{0}&apos; cannot have its kind property equal to &quot;Unspecified&quot;..
+            </summary>
+        </member>
+        <member name="P:ArtemisWest.StringTable.Guard_EnumerationNotSupported">
+            <summary>
+              Looks up a localized string similar to The provided enumeration &apos;{0}&apos; is not supported..
+            </summary>
+        </member>
+        <member name="P:ArtemisWest.StringTable.Range_ArgumentOutOfRange">
+            <summary>
+              Looks up a localized string similar to The &apos;end&apos; argument must be greater than the &apos;start&apos; argument..
+            </summary>
+        </member>
+        <member name="P:ArtemisWest.StringTable.TemporalExtensions_DaysOutOfRange">
+            <summary>
+              Looks up a localized string similar to Days value must be between +/-10675199..
+            </summary>
+        </member>
+        <member name="P:ArtemisWest.StringTable.TemporalExtensions_HoursOutOfRange">
+            <summary>
+              Looks up a localized string similar to Hours value must be between +/-256204778..
+            </summary>
+        </member>
+        <member name="P:ArtemisWest.StringTable.TemporalExtensions_MonthsOutOfRange">
+            <summary>
+              Looks up a localized string similar to Months value must be between +/-120000..
+            </summary>
+        </member>
+        <member name="P:ArtemisWest.StringTable.TemporalExtensions_WeeksOutOfRange">
+            <summary>
+              Looks up a localized string similar to Weeks value must be between +/-1525028..
+            </summary>
+        </member>
+        <member name="P:ArtemisWest.StringTable.TemporalExtensions_YearsOutOfRange">
+            <summary>
+              Looks up a localized string similar to Years value must be between +/-10000..
+            </summary>
+        </member>
+        <member name="T:ArtemisWest.SR">
+            <summary>
+            Internal String Resource helper.
+            </summary>
+            <remarks>
+            <para>General code copied from MS.Internal.PresentationCore from PresentationCore dll to help deal with resources.</para>
+            <para>The intention is to provide formated string resources with less verbosity.</para>
+            <example>
+            This example show the verbosity of code with out using this system.
+            <code>
+            throw new CustomException(string.Format(StringTable.My_String, "argument1", "argument2"));
+            </code>
+            This example shows the same call
+            <code>
+            throw new CustomException(SR.Get(SRID.My_String, "argument1", "argument2"));
+            </code>
+            </example>
+            </remarks>
+        </member>
+        <member name="F:ArtemisWest.SR._resourceManager">
+            <summary>
+            Resource manager for the string resources.
+            </summary>
+        </member>
+        <member name="M:ArtemisWest.SR.Get(ArtemisWest.SRID,System.Object[])">
+            <summary>
+            Gets the resource string by the specified <see cref="T:SRID"/>.
+            </summary>
+            <param name="id">The resource identifier.</param>
+            <param name="args">An <see cref="T:System.Object"/> array containing zero or more objects to format.</param>
+            <returns>The formatted resource string.</returns>
+        </member>
+        <member name="T:ArtemisWest.Security.InvalidPrincipalException">
+            <summary>
+            The exception thrown when the <see cref="T:System.Security.Principal.IPrincipal"/> is invalid for the security system.
+            </summary>
+        </member>
+        <member name="M:ArtemisWest.Security.InvalidPrincipalException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:InvalidPrincipalException"/> class.
+            </summary>
+        </member>
+        <member name="M:ArtemisWest.Security.InvalidPrincipalException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:InvalidPrincipalException"/> class with a specified error message.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception.</param>
+        </member>
+        <member name="M:ArtemisWest.Security.InvalidPrincipalException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:InvalidPrincipalException"/> class with a specified error message and the exception that is the cause of this exception.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception. </param>
+            <param name="inner">The inner exception.</param>
+        </member>
+        <member name="M:ArtemisWest.Security.InvalidPrincipalException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:InvalidPrincipalException"/> class with serialized data.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"></see> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"></see> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"></see> is zero (0). </exception>
+            <exception cref="T:System.ArgumentNullException">The info parameter is null. </exception>
+        </member>
+        <member name="T:ArtemisWest.ILogger">
+            <summary>
+            Logging interface for all Artemis West loggers.
+            </summary>
+        </member>
+        <member name="M:ArtemisWest.ILogger.Trace(System.String)">
+            <summary>
+            Logs very detailed log messages, potentially of a high frequency and volume.
+            </summary>
+            <param name="message">The message to be logged.</param>
+            <remarks>
+            Trace level logging is intended to be the highest level of verbosity. This should only be used for tracing in high detail
+            and there for is not recommended for production or load testing environments.
+            </remarks>
+        </member>
+        <member name="M:ArtemisWest.ILogger.Debug(System.String)">
+            <summary>
+            Logs detailed messages for useful for programer debugging.
+            </summary>
+            <param name="message">The message to be logged.</param>
+            <remarks>
+            Debug level logging is intended to be a verbose level of logging to aid the programmers in debugging applications. Debug
+            level loggng is not intended for production environments.
+            </remarks>
+        </member>
+        <member name="M:ArtemisWest.ILogger.Info(System.String)">
+            <summary>
+            Logs a messages of general information nature.
+            </summary>
+            <param name="message">The message to be logged.</param>
+            <remarks>
+            Information messages are generaly courteous messages to inform of a change of application state. Information messages 
+            should be logged in a production environment.
+            <example>
+            Some things you may wish to log as infromation messages are:
+            <list type="disc">
+            <item>Application start</item>
+            <item>Application close</item>
+            <item>Application recovery</item>
+            <item>Application backup/restore</item>
+            <item>Application sync</item>
+            </list>
+            </example>
+            </remarks>
+        </member>
+        <member name="M:ArtemisWest.ILogger.Warn(System.String)">
+            <summary>
+            Logs messages of a warning nature.
+            </summary>
+            <param name="message">The message to be logged.</param>
+            <remarks>
+            Warning messages are generally logged when a recoverable error occurs. These errors should not prevent the application
+            from being used, or possibly even require user to be aware of the under lying error. Warning messages may be logged in
+            a production environment.
+            </remarks>
+        </member>
+        <member name="M:ArtemisWest.ILogger.Error(System.String)">
+            <summary>
+            Logs an error message.
+            </summary>
+            <param name="message">The message to be logged.</param>
+            <remarks>
+            Error messages are generally logged when a recoverable exception occurs. These exceptions may have required user 
+            intervention or maybe considered more serious than a warning message. Error messages should be logged in a production 
+            environment.
+            </remarks>
+        </member>
+        <member name="M:ArtemisWest.ILogger.Fatal(System.String)">
+            <summary>
+            Logs a fatal error messages. 
+            </summary>
+            <param name="message">The message to be logged.</param>
+            <remarks>
+            Fatal errors are unrecoverable. In the senario of an unrecoverable error, attempt to use this method to log any useful
+            information before the application terminates. Fatal messages should be logged in a production environment.
+            </remarks>
+        </member>
+        <member name="T:ArtemisWest.LoggerExtensions">
+            <summary>
+            Provides common extensions to the <see cref="T:ILogger"/> interface. This allows code reuse without having 
+            to implement a class hierarchy.
+            </summary>
+        </member>
+        <member name="M:ArtemisWest.LoggerExtensions.Write(ArtemisWest.ILogger,ArtemisWest.LoggingLevel,System.String)">
+            <summary>
+            Calls the appropriate method on the specified logger.
+            </summary>
+            <param name="logger">The logger.</param>
+            <param name="level">The level.</param>
+            <param name="message">The message.</param>
+        </member>
+        <member name="T:ArtemisWest.TemporalExtensions">
+            <summary>
+            Extension methods for providing time and date related functionality.
+            </summary>
+            <remarks>
+            The intention of these extension methods is enable a fluent interface that improves readability of code.
+            </remarks>
+        </member>
+        <member name="M:ArtemisWest.TemporalExtensions.Milliseconds(System.Int32)">
+            <summary>
+            Returns a <see cref="T:System.TimeSpan"/> equivilent to the specified amount of milliseconds.
+            </summary>
+            <param name="milliseconds">The milliseconds.</param>
+            <returns>Returns a <see cref="T:System.TimeSpan"/> equivilent to the specified amount of milliseconds sepcified by <paramref name="milliseconds"/>.</returns>
+        </member>
+        <member name="M:ArtemisWest.TemporalExtensions.Seconds(System.Int32)">
+            <summary>
+            Returns a <see cref="T:System.TimeSpan"/> equivilent to the specified amount of seconds.
+            </summary>
+            <param name="seconds">The seconds.</param>
+            <returns>Returns a <see cref="T:System.TimeSpan"/> equivilent to the specified amount of seconds sepcified by <paramref name="seconds"/>.</returns>
+        </member>
+        <member name="M:ArtemisWest.TemporalExtensions.Minutes(System.Int32)">
+            <summary>
+            Returns a <see cref="T:System.TimeSpan"/> equivilent to the specified amount of minutes.
+            </summary>
+            <param name="minutes">The minutes.</param>
+            <returns>Returns a <see cref="T:System.TimeSpan"/> equivilent to the specified amount of minutes sepcified by <paramref name="minutes"/>.</returns>
+        </member>
+        <member name="M:ArtemisWest.TemporalExtensions.Hours(System.Int32)">
+            <summary>
+            Returns a <see cref="T:System.TimeSpan"/> equivilent to the specified amount of hours.
+            </summary>
+            <param name="hours">The hours.</param>
+            <returns>Returns a <see cref="T:System.TimeSpan"/> equivilent to the specified amount of hours sepcified by <paramref name="hours"/>.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">The parameters specify a <see cref="T:System.TimeSpan"/> value less than <see cref="F:System.TimeSpan.MinValue"/> or greater than <see cref="F:System.TimeSpan.MaxValue"/>. </exception>
+        </member>
+        <member name="M:ArtemisWest.TemporalExtensions.Days(System.Int32)">
+            <summary>
+            Returns a <see cref="T:System.TimeSpan"/> equivilent to the specified amount of days.
+            </summary>
+            <param name="days">The days.</param>
+            <returns>Returns a <see cref="T:System.TimeSpan"/> equivilent to the specified amount of days sepcified by <paramref name="days"/>.</returns>
+        </member>
+        <member name="M:ArtemisWest.TemporalExtensions.Weeks(System.Int32)">
+            <summary>
+            Returns a <see cref="T:System.TimeSpan"/> equivilent to the specified amount of weeks.
+            </summary>
+            <param name="weeks">The weeks.</param>
+            <returns>Returns a <see cref="T:System.TimeSpan"/> equivilent to the specified amount of weeks sepcified by <paramref name="weeks"/>.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">The parameters specify a <see cref="T:System.TimeSpan"/> value less than <see cref="F:System.TimeSpan.MinValue"/> or greater than <see cref="F:System.TimeSpan.MaxValue"/>. </exception>
+        </member>
+        <member name="M:ArtemisWest.TemporalExtensions.Ago(System.TimeSpan)">
+            <summary>
+            Returns a <see cref="T:System.DateTime"/> result of <see cref="M:System.DateTime.Now"/> minus the <see cref="T:System.TimeSpan"/> specified.
+            </summary>
+            <param name="period">The period to subtract from the current system time.</param>
+            <returns>Returns a <see cref="T:System.DateTime"/> result of the current system time minus the <see cref="T:System.TimeSpan"/> specified.</returns>
+        </member>
+        <member name="M:ArtemisWest.TemporalExtensions.FromNow(System.TimeSpan)">
+            <summary>
+            Returns a <see cref="T:System.DateTime"/> result of <see cref="M:System.DateTime.Now"/> plus the <see cref="T:System.TimeSpan"/> specified.
+            </summary>
+            <param name="period">The period to add to the current system time.</param>
+            <returns>Returns a <see cref="T:System.DateTime"/> result of the current system time plus the <see cref="T:System.TimeSpan"/> specified.</returns>
+        </member>
+        <member name="M:ArtemisWest.TemporalExtensions.MonthsAgo(System.Int32)">
+            <summary>
+            Returns a <see cref="T:System.DateTime"/> result of <see cref="M:System.DateTime.Now"/> minus the number of months specified.
+            </summary>
+            <param name="months">The number months to subtract from the current system time.</param>
+            <returns>Returns a <see cref="T:System.DateTime"/> result of the current system time minus the <paramref name="months"/> specified.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">The resulting <see cref="T:System.DateTime"></see> is less than <see cref="F:System.DateTime.MinValue"></see> or greater than <see cref="F:System.DateTime.MaxValue"></see>.-or- months is less than -120,000 or greater than 120,000. </exception>
+        </member>
+        <member name="M:ArtemisWest.TemporalExtensions.MonthsFromNow(System.Int32)">
+            <summary>
+            Returns a <see cref="T:System.DateTime"/> result of <see cref="M:System.DateTime.Now"/> plus the number of months specified.
+            </summary>
+            <param name="months">The number months to add to the current system time.</param>
+            <returns>Returns a <see cref="T:System.DateTime"/> result of the current system time plus the <paramref name="months"/> specified.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">The resulting <see cref="T:System.DateTime"></see> is less than <see cref="F:System.DateTime.MinValue"></see> or greater than <see cref="F:System.DateTime.MaxValue"></see>.-or- months is less than -120,000 or greater than 120,000. </exception>
+        </member>
+        <member name="M:ArtemisWest.TemporalExtensions.YearsAgo(System.Int32)">
+            <summary>
+            Returns a <see cref="T:System.DateTime"/> result of <see cref="M:System.DateTime.Now"/> minus the number of years specified.
+            </summary>
+            <param name="years">The number years to subtract from the current system time.</param>
+            <returns>Returns a <see cref="T:System.DateTime"/> result of the current system time minus the <paramref name="years"/> specified.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Throw when the resulting <see cref="T:System.DateTime"/> is less than <see cref="F:System.DateTime.MinValue"/> or greater than <see cref="F:System.DateTime.MaxValue"/>. </exception>
+        </member>
+        <member name="M:ArtemisWest.TemporalExtensions.YearsFromNow(System.Int32)">
+            <summary>
+            Returns a <see cref="T:System.DateTime"/> result of <see cref="M:System.DateTime.Now"/> plus the number of years specified.
+            </summary>
+            <param name="years">The number years to add to the current system time.</param>
+            <returns>Returns a <see cref="T:System.DateTime"/> result of the current system time plus the <paramref name="years"/> specified.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Throw when the resulting <see cref="T:System.DateTime"/> is less than <see cref="F:System.DateTime.MinValue"/> or greater than <see cref="F:System.DateTime.MaxValue"/>. </exception>
+        </member>
+        <member name="M:ArtemisWest.TemporalExtensions.DaysInYear(System.DateTime)">
+            <summary>
+            Returns the number of days the in year of a date.
+            </summary>
+            <param name="date">The date.</param>
+            <returns>The number of days in the year of the date.</returns>
+        </member>
+        <member name="T:ArtemisWest.IValidation`1">
+            <summary>
+            Provides methods to validate a items of a given type.
+            </summary>
+            <typeparam name="T">The type the validation applies to.</typeparam>
+        </member>
+        <member name="M:ArtemisWest.IValidation`1.Validate(`0)">
+            <summary>
+            Validates the specified item, returning a collection of validation errors.
+            </summary>
+            <param name="item">The item to validate.</param>
+            <returns>Returns a <see cref="T:ArtemisWest.ValidationErrorCollection"/> that is empty for a valid item, 
+            or contains the validation errors if the item is not in a valid state.</returns>
+            <remarks>
+            Implementations of <see cref="T:ArtemisWest.IValidation`1"/> should never return null from the validate method.
+            If no validation errors occured then return an empty collection.
+            </remarks>
+        </member>
+        <member name="T:ArtemisWest.IValidationExtensions">
+            <summary>
+            Provides common extensions to the <see cref="T:IValidation`1"/> interface. This allows code reuse without having 
+            to implement a class hierarchy.
+            </summary>
+        </member>
+        <member name="M:ArtemisWest.IValidationExtensions.Demand``1(ArtemisWest.IValidation{``0},``0)">
+            <summary>
+            Raises a <see cref="T:ArtemisWest.ValidationException"/> if the <paramref name="item"/> is not valid.
+            </summary>
+            <typeparam name="T">The type that the instance of <see cref="T:IValidation`1"/> targets.</typeparam>
+            <param name="validator">The validator.</param>
+            <param name="item">The item to be validated.</param>
+            <exception cref="T:ArtemisWest.ValidationException">
+            Thrown when validating the <paramref name="item"/> returns any errors. Only the first 
+            validation error is raised with the exception. Any validation errors that are marked as
+            warnings are ignored.
+            </exception>
+        </member>
+        <member name="T:ArtemisWest.LogAspectBaseAttribute">
+            <summary>
+            Base AOP Attribute used for injecting logging code into methods to capture method inputs, outputs and
+            exceptions.
+            </summary>
+            <remarks>
+            <para>
+            Implementations of this attribute would usually be set at a method or class level. It can be applied
+            at an assembly level for complete logging coverage. However, applying the attribute to the assembly 
+            may cause excessive or redundant logging to occur. For example property get/sets will be logged.
+            </para>
+            <para>
+            To use this aspect, your project will require references to PostSharp.Public.dll and 
+            PostSharp.Laos.dll. Also to initiate the AOP weaving either PostSharp needs to be installed or 
+            ideally the csproj file needs to be modified. See the PostSharp documentation for more information.
+            The logging code will be added to the IL at build time.
+            </para>
+            </remarks>
+            <example>
+            <para>
+            To add logging to an enitre assembly add the following code to the AssemblyInfo.cs file.
+            <code>
+            //Log the whole assembly, where MyLoggingAspectAttribute is an implementation of ArtemisWest.LogAspectBaseAttribute.
+            [assembly: ArtemisWest.ProjectName.MyLoggingAspect]
+            </code>
+            </para>
+            <para>
+            To add logging to a class or a member (method, constructor, property etc) just attribute the method 
+            up as per usual.
+            <code>
+            [ArtemisWest.ProjectName.MyLoggingAspect]
+            class ImplicitLoggingExample
+            {
+                void LoggedMethod(string[] args)
+                {
+                    Console.Write("I have been logged!");
+                }
+            }
+            
+            class ExplicitLoggingExample
+            {
+                void UnLoggedMethod()
+                {
+                    Console.Write("I have NOT been logged!");
+                }
+                
+                [ArtemisWest.ProjectName.MyLoggingAspect]
+                void LoggedMethod()
+                {
+                    Console.Write("I have been logged!");
+                }
+            }
+            </code>
+            </para>
+            <para>
+            When implementations of the <see cref="T:ArtemisWest.LogAspectBaseAttribute"/> have been applied at a
+            class or assembly level, code can be excluded from being logged by marking up the code to be excluded
+            with the implementation attribute and specifing the 
+            <see cref="P:PostSharp.Laos.OnMethodBoundaryAspect.AttributeExclude"/> property to <c>true</c>.
+            <code>
+            [ArtemisWest.ProjectName.MyLoggingAspect]
+            public class ExclusionExample
+            {
+                [ArtemisWest.ProjectName.MyLoggingAspect(AttributeExclude=true)]
+                void UnLoggedMethod()
+                {
+                    Console.Write("I have NOT been logged!");
+                }
+                
+                void LoggedMethod()
+                {
+                    Console.Write("I have been logged!");
+                }
+            }
+            </code>
+            </para>
+            </example>
+        </member>
+        <member name="M:ArtemisWest.LogAspectBaseAttribute.OnEntry(PostSharp.Laos.MethodExecutionEventArgs)">
+            <summary>
+            Logs the method entry with any inputs.
+            </summary>
+            <param name="eventArgs">The <see cref="T:PostSharp.Laos.MethodExecutionEventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:ArtemisWest.LogAspectBaseAttribute.OnExit(PostSharp.Laos.MethodExecutionEventArgs)">
+            <summary>
+            Logs the exit of the method with the return value if appropriate.
+            </summary>
+            <param name="eventArgs">The <see cref="T:PostSharp.Laos.MethodExecutionEventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="M:ArtemisWest.LogAspectBaseAttribute.OnException(PostSharp.Laos.MethodExecutionEventArgs)">
+            <summary>
+            Logs the exit of a method due to an exception.
+            </summary>
+            <param name="eventArgs">The <see cref="T:PostSharp.Laos.MethodExecutionEventArgs"/> instance containing the event data.</param>
+        </member>
+        <member name="P:ArtemisWest.LogAspectBaseAttribute.Logger">
+            <summary>
+            The implementation of <see cref="T:ArtemisWest.ILogger"/> that is used for the implementation of this 
+            attribute.
+            </summary>
+        </member>
+        <member name="P:ArtemisWest.LogAspectBaseAttribute.EntryLevel">
+            <summary>
+            The <see cref="T:ArtemisWest.LoggingLevel"/> that messages generated from the <seealso cref="M:ArtemisWest.LogAspectBaseAttribute.OnEntry(PostSharp.Laos.MethodExecutionEventArgs)"/> will be logged as.
+            </summary>
+        </member>
+        <member name="P:ArtemisWest.LogAspectBaseAttribute.ExitLevel">
+            <summary>
+            The <see cref="T:ArtemisWest.LoggingLevel"/> that messages generated from the <seealso cref="M:ArtemisWest.LogAspectBaseAttribute.OnExit(PostSharp.Laos.MethodExecutionEventArgs)"/> will be logged as.
+            </summary>
+        </member>
+        <member name="P:ArtemisWest.LogAspectBaseAttribute.ExceptionLevel">
+            <summary>
+            The <see cref="T:ArtemisWest.LoggingLevel"/> that messages generated from the <seealso cref="M:ArtemisWest.LogAspectBaseAttribute.OnException(PostSharp.Laos.MethodExecutionEventArgs)"/> will be logged as.
+            </summary>
+        </member>
+        <member name="T:ArtemisWest.ValidationError">
+            <summary>
+            Represents a validation error.
+            </summary>
+        </member>
+        <member name="M:ArtemisWest.ValidationError.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ArtemisWest.ValidationError"/> class.
+            </summary>
+            <param name="message">The validation failure message.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="message"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when the <paramref name="message"/> parameter is zero length.</exception>
+        </member>
+        <member name="M:ArtemisWest.ValidationError.#ctor(System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ArtemisWest.ValidationError"/> class.
+            </summary>
+            <param name="message">The validation failure message.</param>
+            <param name="isWarning">Value indicating whether this instance is only a warning.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="message"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when the <paramref name="message"/> parameter is zero length.</exception>
+        </member>
+        <member name="P:ArtemisWest.ValidationError.IsWarning">
+            <summary>
+            Gets a value indicating whether this instance is a warning.
+            </summary>
+            <value>
+            	<c>true</c> if this instance is a warning; otherwise, <c>false</c>.
+            </value>
+            <remarks>
+            Some validation failures may only be warnings. For example it may be an error for a customer 
+            name to be empty or null, however, a warning may be raised if the length of the name was less
+            than three (3).
+            </remarks>
+        </member>
+        <member name="P:ArtemisWest.ValidationError.Message">
+            <summary>
+            Gets the validation failure message.
+            </summary>
+            <value>The message.</value>
+        </member>
+        <member name="T:ArtemisWest.Guard">
+            <summary>
+            Helper methods for validating method parameters.
+            </summary>
+            <remarks>
+            This simply provides convenience methods for validating method arguments. It provides standardised
+            formatted exception messages.
+            </remarks>
+        </member>
+        <member name="M:ArtemisWest.Guard.ArgumentNotNull(System.Object,System.String)">
+            <summary>
+            Checks an argument to ensure it is not null.
+            </summary>
+            <param name="argumentValue">The argument value to check.</param>
+            <param name="argumentName">The name of the argument.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="argumentValue"/> parameter is null.</exception>
+            <remarks>
+            Remember to document <see cref="T:System.ArgumentNullException" /> as an exception your method may throw when using <see cref="M:ArtemisWest.Guard.ArgumentNotNull(System.Object,System.String)"/>.
+            </remarks>
+            <example>
+            This example shows the usage of the <see cref="M:ArtemisWest.Guard.ArgumentNotNull(System.Object,System.String)"/> method. 
+                <code>
+            <![CDATA[
+            ///<exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="customer"/> parameter is null.</exception>
+            public void Add(Customer customer)
+            {
+                Guard.ArgumentNotNull(customer, "customer");
+                
+                //Implementation of the add method (not relevant to the example)
+                _customers.Add(customer.Id, customer);
+            }
+            ]]>
+                </code>
+            </example>
+        </member>
+        <member name="M:ArtemisWest.Guard.ArgumentNotNullOrEmpty(System.String,System.String)">
+            <summary>
+            Checks a string argument to ensure it is not null or empty.
+            </summary>
+            <param name="argumentValue">The argument value to check.</param>
+            <param name="argumentName">The name of the argument.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="argumentValue"/> parameter is null.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when the <paramref name="argumentValue"/> parameter is zero length.</exception>
+            <remarks>
+            Remember to document <see cref="T:System.ArgumentNullException" /> and <see cref="T:System.ArgumentException"/> as exceptions your method may throw
+            when using <see cref="M:ArtemisWest.Guard.ArgumentNotNullOrEmpty(System.String,System.String)"/>.
+            </remarks>
+            <example>
+            This example shows the usage of the <see cref="M:ArtemisWest.Guard.ArgumentNotNullOrEmpty(System.String,System.String)"/> method.
+                <code>
+            <![CDATA[
+            ///<exception cref="T:System.ArgumentNullException">Thrown when either <paramref name="key"/> or <paramref name="value"/> parameters are null.</exception>
+            ///<exception cref="T:System.ArgumentException">Thrown when either <paramref name="key"/> or <paramref name="value"/> parameters are zero length.</exception>
+            public void Add(string key, string value)
+            {
+                Guard.ArgumentNotNullOrEmpty(key, "key");
+                Guard.ArgumentNotNullOrEmpty(value, "value");
+                
+                //Implementation of the Add method (not relevant to the example)
+                _myDictionary.Add(key, value);
+            }
+            ]]>
+                </code>
+            </example>
+        </member>
+        <member name="M:ArtemisWest.Guard.ArgumentNotNullOrEmpty(System.Collections.ICollection,System.String)">
+            <summary>
+            Checks a collection argument to ensure it is not null or empty.
+            </summary>
+            <param name="argumentValue">The argument value to check.</param>
+            <param name="argumentName">The name of the argument.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="argumentValue"/> parameter is null.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when the <paramref name="argumentValue"/> parameter is zero length.</exception>
+            <remarks>
+            Remember to document <see cref="T:System.ArgumentNullException" /> and <see cref="T:System.ArgumentException"/> as exceptions your method may throw
+            when using <see cref="M:ArtemisWest.Guard.ArgumentNotNullOrEmpty(System.Collections.ICollection,System.String)"/>.
+            </remarks>
+            <example>
+            This example shows the usage of the <see cref="M:ArtemisWest.Guard.ArgumentNotNullOrEmpty(System.Collections.ICollection,System.String)"/> method.
+                <code>
+            <![CDATA[
+            ///<exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="customers"/> parameter is null.</exception>
+            ///<exception cref="T:System.ArgumentException">Thrown when the <paramref name="customers"/> parameter is zero length.</exception>
+            public void AddRange(CustomerCollection customers)
+            {
+                Guard.ArgumentNotNullOrEmpty(customers, "customers");
+                
+                //Implementation of the AddRange method (not relevant to the example)
+                foreach (Customer customer in customers)
+                {
+                    Add(customer);
+                }
+            }    
+            ]]>
+                </code>
+            </example>
+        </member>
+        <member name="M:ArtemisWest.Guard.ArgumentNotKindUnspecified(System.DateTime,System.String)">
+            <summary>
+            Checks a <see cref="T:System.DateTime"/> argument to ensure it's <see cref="P:System.DateTime.Kind"/> property is not set to <see cref="F:System.DateTimeKind.Unspecified"/>.
+            </summary>
+            <param name="argumentValue">The argument value to check.</param>
+            <param name="argumentName">The name of the argument.</param>
+            <exception cref="T:System.ArgumentException">Thrown when the <paramref name="argumentValue"/> parameter has it's <see cref="P:System.DateTime.Kind"/> property set to <see cref="F:System.DateTimeKind.Unspecified"/>.</exception>
+            <remarks>
+            Remember to document <see cref="T:System.ArgumentException" /> as an exception your method may throw
+            when using <see cref="M:ArtemisWest.Guard.ArgumentNotKindUnspecified(System.DateTime,System.String)"/>.
+            </remarks>
+            <example>
+            This example shows the usage of the <see cref="M:ArtemisWest.Guard.ArgumentNotKindUnspecified(System.DateTime,System.String)"/> method.
+                <code>
+            <![CDATA[
+            ///<exception cref="T:System.ArgumentException">Thrown when the <paramref name="startDate"/> parameter has it's <see cref="P:System.DateTime.Kind"/> property set to <see cref="F:System.DateTimeKind.Unspecified"/>.</exception>
+            public string FormatToISOString(DateTime startDate)
+            {
+                Guard.ArgumentNotKindUnspecified(startDate, "startDate");
+                
+                //Implementation of the FormatToUTCString method (not relevant to the example)
+                return startDate.ToString("o", Thread.CurrentThread.CurrentUICulture);
+            }    
+            ]]>
+                </code>
+            </example>
+        </member>
+        <member name="M:ArtemisWest.Guard.ArgumentNotKindUnspecified(System.Nullable{System.DateTime},System.String)">
+            <summary>
+            Checks a <see cref="T:Nullable&lt;DateTime&gt;"/> argument to ensure it's <see cref="P:System.DateTime.Kind"/> property is not set to <see cref="F:System.DateTimeKind.Unspecified"/>.
+            </summary>
+            <param name="argumentValue">The argument value to check.</param>
+            <param name="argumentName">The name of the argument.</param>
+            <exception cref="T:System.ArgumentException">Thrown when the <paramref name="argumentValue"/> parameter has it's <see cref="P:System.DateTime.Kind"/> property set to <see cref="F:System.DateTimeKind.Unspecified"/>.</exception>
+            <remarks>
+            Remember to document <see cref="T:System.ArgumentException" /> as an exception your method may throw
+            when using <see cref="M:ArtemisWest.Guard.ArgumentNotKindUnspecified(System.Nullable&lt;System.DateTime&gt;,System.String)"/>.
+            </remarks>
+            <example>
+            This example shows the usage of the <see cref="M:ArtemisWest.Guard.ArgumentNotKindUnspecified(System.Nullable&lt;System.DateTime&gt;,System.String)"/> method.
+                <code>
+            <![CDATA[
+            ///<exception cref="T:System.ArgumentException">Thrown when the <paramref name="startDate"/> parameter has it's <see cref="P:System.DateTime.Kind"/> property set to <see cref="F:System.DateTimeKind.Unspecified"/>.</exception>
+            public string FormatToISOString(DateTime? startDate)
+            {
+                if(startDate.HasValue)
+                {
+                    Guard.ArgumentNotKindUnspecified(startDate, "startDate");
+                
+                    //Implementation of the FormatToUTCString method (not relevant to the example)
+                    return startDate.ToString("o", Thread.CurrentThread.CurrentUICulture);
+                }
+                return string.Empty;
+            }    
+            ]]>
+                </code>
+            </example>
+        </member>
+        <member name="T:ArtemisWest.SRID">
+            <summary>
+            Struct copied from MS.Internal.PresentationCore from PresentationCore dll to help deal with resources
+            </summary>
+        </member>
+        <member name="M:ArtemisWest.SRID.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ArtemisWest.SRID"/> struct.
+            </summary>
+            <param name="id">The resource identifier.</param>
+        </member>
+        <member name="P:ArtemisWest.SRID.String">
+            <summary>
+            Gets the resource identifier string.
+            </summary>
+            <value>Resource identifier.</value>
+        </member>
+        <member name="P:ArtemisWest.SRID.Guard_ArgumentNotEmptyString">
+            <summary>
+            Gets the Guard_ArgumentNotEmptyString resource string.
+            </summary>
+            <value>The Guard_ArgumentNotEmptyString resource string.</value>
+        </member>
+        <member name="P:ArtemisWest.SRID.Guard_ArgumentNotEmptyCollection">
+            <summary>
+            Gets the Guard_ArgumentNotEmptyCollection resource string.
+            </summary>
+            <value>The Guard_ArgumentNotEmptyCollection resource string.</value>
+        </member>
+        <member name="P:ArtemisWest.SRID.Guard_ArgumentNotKindUnspecified">
+            <summary>
+            Gets the Guard_ArgumentNotKindUnspecified resource string.
+            </summary>
+            <value>The Guard_ArgumentNotKindUnspecified resource string.</value>
+        </member>
+        <member name="P:ArtemisWest.SRID.Guard_EnumerationNotSupported">
+            <summary>
+            Gets the Guard_EnumerationNotSupported resource string.
+            </summary>
+            <value>The Guard_EnumerationNotSupported resource string.</value>
+        </member>
+        <member name="P:ArtemisWest.SRID.TemporalExtensions_MonthsOutOfRange">
+            <summary>
+            Gets the TemporalExtensions_MonthsOutOfRange resource string.
+            </summary>
+            <value>The TemporalExtensions_MonthsOutOfRange resource string.</value>
+        </member>
+        <member name="P:ArtemisWest.SRID.TemporalExtensions_YearsOutOfRange">
+            <summary>
+            Gets the TemporalExtensions_YearsOutOfRange resource string.
+            </summary>
+            <value>The TemporalExtensions_YearsOutOfRange resource string.</value>
+        </member>
+        <member name="P:ArtemisWest.SRID.TemporalExtensions_WeeksOutOfRange">
+            <summary>
+            Gets the TemporalExtensions_WeeksOutOfRange resource string.
+            </summary>
+            <value>The TemporalExtensions_WeeksOutOfRange resource string.</value>
+        </member>
+        <member name="P:ArtemisWest.SRID.TemporalExtensions_HoursOutOfRange">
+            <summary>
+            Gets the TemporalExtensions_HoursOutOfRange resource string.
+            </summary>
+            <value>The TemporalExtensions_HoursOutOfRange resource string.</value>
+        </member>
+        <member name="P:ArtemisWest.SRID.TemporalExtensions_DaysOutOfRange">
+            <summary>
+            Gets the TemporalExtensions_DaysOutOfRange resource string.
+            </summary>
+            <value>The TemporalExtensions_DaysOutOfRange resource string.</value>
+        </member>
+        <member name="P:ArtemisWest.SRID.Range_ArgumentOutOfRange">
+            <summary>
+            Gets the Range_ArgumentOutOfRange resource string.
+            </summary>
+            <value>The Range_ArgumentOutOfRange resource string.</value>
+        </member>
+        <member name="T:ArtemisWest.Security.IAuthorization`1">
+            <summary>
+            Defines methods to check and demand permission level authorization against a type.
+            </summary>
+            <typeparam name="T">The type to authoize against.</typeparam>
+            <seealso cref="T:ArtemisWest.Security.IAuthorization"/>
+        </member>
+        <member name="M:ArtemisWest.Security.IAuthorization`1.Demand(System.Int32,`0)">
+            <summary>
+            Demands that the current user is authorizated for the specified <paramref name="permission"/> on the 
+            specified <paramref name="item"/>. Throws an <see cref="T:ArtemisWest.Security.AuthorizationException"/> if authorization is denied.
+            </summary>
+            <param name="permission">The permission required to pass authorization.</param>
+            <param name="item">The item for which the permission is required to pass authorization.</param>
+            <exception cref="T:System.ArgumentException">Thrown when the <paramref name="permission"/> parameter is invalid.</exception>
+            <exception cref="T:ArtemisWest.Security.AuthorizationException">Thrown when the demand for the authorization fails.</exception>
+            <exception cref="T:ArtemisWest.Security.InvalidPrincipalException">Thrown when the Principal is invalid for the security system.</exception>
+        </member>
+        <member name="M:ArtemisWest.Security.IAuthorization`1.IsAuthorized(System.Int32,`0)">
+            <summary>
+            Determines whether the current user is authorized for specified <paramref name="permission"/> on the 
+            specified <paramref name="item"/>.
+            </summary>
+            <param name="permission">The permission to authorize against.</param>
+            <param name="item">The item to apply the authorization check against.</param>
+            <returns>
+            	<c>true</c> if the current user is authorized for specified permission on the specified <paramref name="item"/>; 
+            	otherwise, <c>false</c>.
+            </returns>
+            <exception cref="T:System.ArgumentException">Thrown when the <paramref name="permission"/> parameter is invalid.</exception>
+            <exception cref="T:ArtemisWest.Security.InvalidPrincipalException">Thrown when the Principal is invalid for the security system.</exception>
+        </member>
+        <member name="T:ArtemisWest.Security.AuthorizationException">
+            <summary>
+            The exception that is thrown when an authorization demand fails.
+            </summary>
+        </member>
+        <member name="M:ArtemisWest.Security.AuthorizationException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ArtemisWest.Security.AuthorizationException"/> class.
+            </summary>
+        </member>
+        <member name="M:ArtemisWest.Security.AuthorizationException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ArtemisWest.Security.AuthorizationException"/> class with a specified error message.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception.</param>
+        </member>
+        <member name="M:ArtemisWest.Security.AuthorizationException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ArtemisWest.Security.AuthorizationException"/> class with a specified error message and the exception that is the cause of this exception.
+            </summary>
+            <param name="message">The error message that explains the reason for the exception. </param>
+            <param name="inner">The inner exception.</param>
+        </member>
+        <member name="M:ArtemisWest.Security.AuthorizationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ArtemisWest.Security.AuthorizationException"/> class with serialized data.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"></see> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"></see> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"></see> is zero (0). </exception>
+            <exception cref="T:System.ArgumentNullException">The info parameter is null. </exception>
+        </member>
+        <member name="T:ArtemisWest.Security.IAuthorization">
+            <summary>
+            Defines methods to check and demand permission level authorization.
+            </summary>
+        </member>
+        <member name="M:ArtemisWest.Security.IAuthorization.Demand(System.Int32)">
+            <summary>
+            Demands the specified permission. Throws an <see cref="T:ArtemisWest.Security.AuthorizationException"/> if authorization is denied.
+            </summary>
+            <param name="permission">The permission.</param>
+            <exception cref="T:ArtemisWest.Security.AuthorizationException">Thrown when the demand for the permission fails.</exception>
+            <exception cref="T:ArtemisWest.Security.InvalidPrincipalException">Thrown when the Principal is invalid for the security system.</exception>
+        </member>
+        <member name="M:ArtemisWest.Security.IAuthorization.IsAuthorized(System.Int32)">
+            <summary>
+            Determines whether the current user is authorized for specified permission.
+            </summary>
+            <param name="permission">The permission to authorize against.</param>
+            <returns>
+            	<c>true</c> if the current user is authorized for specified permission; otherwise, <c>false</c>.
+            </returns>
+            <exception cref="T:ArtemisWest.Security.InvalidPrincipalException">Thrown when the Principal is invalid for the security system.</exception>
+        </member>
+        <member name="T:ArtemisWest.LoggingLevel">
+            <summary>
+            Specifies levels of logging.
+            </summary>
+        </member>
+        <member name="F:ArtemisWest.LoggingLevel.Trace">
+            <summary>
+            Very detailed log messages, potentially of a high frequency and volume.
+            </summary>
+        </member>
+        <member name="F:ArtemisWest.LoggingLevel.Debug">
+            <summary>
+            Less detailed and/or less frequent debugging messages.
+            </summary>
+        </member>
+        <member name="F:ArtemisWest.LoggingLevel.Info">
+            <summary>
+            Informational messages.
+            </summary>
+        </member>
+        <member name="F:ArtemisWest.LoggingLevel.Warn">
+            <summary>
+            Warnings which don't appear to the user of the application.
+            </summary>
+        </member>
+        <member name="F:ArtemisWest.LoggingLevel.Error">
+            <summary>
+            Error messages.
+            </summary>
+        </member>
+        <member name="F:ArtemisWest.LoggingLevel.Fatal">
+            <summary>
+            Fatal error messages. After a fatal error the application usually terminates.
+            </summary>
+        </member>
+        <member name="T:ArtemisWest.ValidationErrorCollection">
+            <summary>
+            Represents a collection of <see cref="T:ArtemisWest.ValidationError"/> objects.
+            </summary>
+            <seealso cref="T:ArtemisWest.ValidationError"/>
+        </member>
+        <member name="M:ArtemisWest.ValidationErrorCollection.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ArtemisWest.ValidationErrorCollection"/> class.
+            </summary>
+        </member>
+        <member name="M:ArtemisWest.ValidationErrorCollection.#ctor(System.Collections.Generic.IEnumerable{ArtemisWest.ValidationError})">
+            <summary>
+            Initializes a new instance of the <see cref="T:ArtemisWest.ValidationErrorCollection"/> class.
+            </summary>
+            <param name="list">The list that is wrapped by the new collection.</param>
+            <exception cref="T:System.ArgumentNullException">
+            	<paramref name="list"/> is null.</exception>
+        </member>
+        <member name="T:ArtemisWest.PropertyExtensions">
+            <summary>
+            Provides extension methods for deailing with property values.
+            </summary>
+            <remarks>
+            These features can aid in scenarios that require refactoring where strings may be missed 
+            <example>
+            ie implementations of <see cref="T:System.ComponentModel.INotifyPropertyChanged"/>
+            </example>
+            </remarks>
+        </member>
+        <member name="M:ArtemisWest.PropertyExtensions.GetPropertyName``2(``0,System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Gets the name of the property from the provided expression.
+            </summary>
+            <typeparam name="TClass">The type of the class.</typeparam>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="instance">The instance.</param>
+            <param name="expression">The expression.</param>
+            <returns>Returns the name of the property expose by the expression.</returns>
+            <exception cref="T:System.ArgumentException">Thrown when the expression can not be resolved to a property on the <paramref name="instance"/>.</exception>
+            <remarks>
+            This extension method is valuable for coding scenarios where the name of a property is required, but using a string literal could cause problems (such as refactoring).
+            <example>
+            For example with the following class (MyClass) with the property (MyProperty)
+            <code>
+            <![CDATA[
+            public class MyClass
+            {
+                public int MyProperty { get; set; }
+            }
+            ]]>
+            </code>
+            you could access the property name like such
+            <code>
+            <![CDATA[
+            var entity = new MyClass();
+            entity.GetPropertyName(o => o.MyProperty)
+            ]]>
+            </code>
+            </example>
+            </remarks>
+        </member>
+        <member name="T:ArtemisWest.ValidationException">
+            <summary>
+            The exception thrown when a validation demand fails.
+            </summary>
+        </member>
+        <member name="M:ArtemisWest.ValidationException.#ctor(ArtemisWest.ValidationError)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ArtemisWest.ValidationException"/> class.
+            </summary>
+            <param name="validationError">The validation error.</param>
+        </member>
+        <member name="M:ArtemisWest.ValidationException.#ctor(ArtemisWest.ValidationErrorCollection)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ArtemisWest.ValidationException"/> class.
+            </summary>
+            <param name="validationErrors">The validation errors that caused the exception.</param>
+        </member>
+        <member name="M:ArtemisWest.ValidationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ArtemisWest.ValidationException"/> class with serialized data.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"></see> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"></see> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"></see> is zero (0). </exception>
+            <exception cref="T:System.ArgumentNullException">The info parameter is null. </exception>
+        </member>
+        <member name="M:ArtemisWest.ValidationException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            When overridden in a derived class, sets the <see cref="T:System.Runtime.Serialization.SerializationInfo"/> with information about the exception.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination. </param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is a null reference (Nothing in Visual Basic). </exception>
+        </member>
+        <member name="P:ArtemisWest.ValidationException.ValidationErrors">
+            <summary>
+            Gets the validation errors.
+            </summary>
+            <value>The validation errors.</value>
+        </member>
+        <member name="T:ArtemisWest.Range`1">
+            <summary>
+            Provides a strucutre for ranges of <see cref="T:System.IComparable"/> values.
+            </summary>
+            <typeparam name="T">The type of elements in the range. </typeparam>
+        </member>
+        <member name="M:ArtemisWest.Range`1.#ctor(`0,`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ArtemisWest.Range`1"/> class.
+            </summary>
+            <param name="start">The start of the range.</param>
+            <param name="end">The end of the range.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when either parameters are null.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when <paramref name="start"/> is not less than <paramref name="end"/>.</exception>
+        </member>
+        <member name="M:ArtemisWest.Range`1.Contains(`0)">
+            <summary>
+            Determines whether the <paramref name="value"/> is contained in this range.
+            </summary>
+            <param name="value">The value.</param>
+            <returns>
+            	<c>true</c> if the <paramref name="value"/> exists within this range; otherwise, <c>false</c>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when either the <paramref name="value"/> parameter is null.</exception>
+        </member>
+        <member name="M:ArtemisWest.Range`1.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>.</param>
+            <returns>
+            true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
+            </returns>
+            <exception cref="T:System.NullReferenceException">
+            The <paramref name="obj"/> parameter is null.
+            </exception>
+        </member>
+        <member name="M:ArtemisWest.Range`1.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type.
+            </summary>
+            <returns>
+            A hash code for the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="M:ArtemisWest.Range`1.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+            </returns>
+        </member>
+        <member name="P:ArtemisWest.Range`1.Start">
+            <summary>
+            Gets the start value.
+            </summary>
+            <value>The start value.</value>
+        </member>
+        <member name="P:ArtemisWest.Range`1.End">
+            <summary>
+            Gets the end value.
+            </summary>
+            <value>The end value.</value>
+        </member>
+        <member name="T:ArtemisWest.NotificationExtensions">
+            <summary>
+            Provides extensions for <see cref="T:System.ComponentModel.INotifyPropertyChanged"/> and it's related types.
+            </summary>
+        </member>
+        <member name="M:ArtemisWest.NotificationExtensions.Raise(System.ComponentModel.PropertyChangedEventHandler,System.ComponentModel.INotifyPropertyChanged,System.String)">
+            <summary>
+            Raises the specified event handler.
+            </summary>
+            <param name="eventHandler">The event handler.</param>
+            <param name="instance">The instance to raise the handler from.</param>
+            <param name="property">The property name to raise the event with.</param>
+        </member>
+        <member name="M:ArtemisWest.NotificationExtensions.WhenPropertyChanges``2(``0,System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Action{``1})">
+            <summary>
+            Executes an action delegate when a property changes.
+            </summary>
+            <typeparam name="TClass">The type of the class the property beongs to.</typeparam>
+            <typeparam name="TResult">The type of the property.</typeparam>
+            <param name="instance">The instance of <typeparamref name="TClass"/> the property belongs to.</param>
+            <param name="expression">The expression to evaluate the property from the instance.</param>
+            <param name="action">The action to perfom when the property value changes.</param>
+        </member>
+        <member name="M:ArtemisWest.NotificationExtensions.VerifyPropertyName(System.Object,System.String)">
+            <summary>
+            Warns the developer if this object does not have
+            a public property with the specified name. This
+            method does not exist in a Release build.
+            </summary>
+        </member>
+        <member name="T:ArtemisWest.ConsoleLogger">
+            <summary>
+            Implementation of the <see cref="T:ArtemisWest.ILogger"/> for logging to the console.
+            </summary>
+            <remarks>
+            This implementation is provided as a courtesy and is not intended for production usage.
+            </remarks>
+        </member>
+        <member name="M:ArtemisWest.ConsoleLogger.Trace(System.String)">
+            <summary>
+            Logs very detailed log messages, potentially of a high frequency and volume.
+            </summary>
+            <param name="message">The message to be logged.</param>
+            <remarks>
+            Trace level logging is intended to be the highest level of verbosity. This should only be used for tracing in high detail
+            and there for is not recommended for production or load testing environments.
+            </remarks>
+        </member>
+        <member name="M:ArtemisWest.ConsoleLogger.Debug(System.String)">
+            <summary>
+            Logs detailed messages for useful for programer debugging.
+            </summary>
+            <param name="message">The message to be logged.</param>
+            <remarks>
+            Debug level logging is intended to be a verbose level of logging to aid the programmers in debugging applications. Debug
+            level loggng is not intended for production environments.
+            </remarks>
+        </member>
+        <member name="M:ArtemisWest.ConsoleLogger.Info(System.String)">
+            <summary>
+            Logs a messages of general information nature.
+            </summary>
+            <param name="message">The message to be logged.</param>
+            <remarks>
+            Information messages are generaly courteous messages to inform of a change of application state. Information messages
+            should be logged in a production environment.
+            <example>
+            Some things you may wish to log as infromation messages are:
+            <list type="disc">
+                <item>Application start</item>
+            	<item>Application close</item>
+            	<item>Application recovery</item>
+            	<item>Application backup/restore</item>
+            	<item>Application sync</item>
+            </list>
+            </example>
+            </remarks>
+        </member>
+        <member name="M:ArtemisWest.ConsoleLogger.Warn(System.String)">
+            <summary>
+            Logs messages of a warning nature.
+            </summary>
+            <param name="message">The message to be logged.</param>
+            <remarks>
+            Warning messages are generally logged when a recoverable error occurs. These errors should not prevent the application
+            from being used, or possibly even require user to be aware of the under lying error. Warning messages may be logged in
+            a production environment.
+            </remarks>
+        </member>
+        <member name="M:ArtemisWest.ConsoleLogger.Error(System.String)">
+            <summary>
+            Logs an error message.
+            </summary>
+            <param name="message">The message to be logged.</param>
+            <remarks>
+            Error messages are generally logged when a recoverable exception occurs. These exceptions may have required user
+            intervention or maybe considered more serious than a warning message. Error messages should be logged in a production
+            environment.
+            </remarks>
+        </member>
+        <member name="M:ArtemisWest.ConsoleLogger.Fatal(System.String)">
+            <summary>
+            Logs a fatal error messages.
+            </summary>
+            <param name="message">The message to be logged.</param>
+            <remarks>
+            Fatal errors are unrecoverable. In the senario of an unrecoverable error, attempt to use this method to log any useful
+            information before the application terminates. Fatal messages should be logged in a production environment.
+            </remarks>
+        </member>
+        <member name="T:ArtemisWest.ConsoleLogger.ConsoleColorSetter">
+            <summary>
+            Helper class for switching between the current console color to a given color and back again.
+            </summary>
+        </member>
+        <member name="M:ArtemisWest.ConsoleLogger.ConsoleColorSetter.#ctor(System.ConsoleColor)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ArtemisWest.ConsoleLogger.ConsoleColorSetter"/> class.
+            </summary>
+            <param name="color">The color.</param>
+        </member>
+        <member name="M:ArtemisWest.ConsoleLogger.ConsoleColorSetter.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:ArtemisWest.ConsoleLogger.ConsoleColorSetter.Dispose(System.Boolean)">
+            <summary>
+            Releases unmanaged and - optionally - managed resources
+            </summary>
+            <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        </member>
+        <member name="T:ArtemisWest.ISpecification`1">
+            <summary>
+            Provides methods to specify if a criteria has been met.
+            </summary>
+            <typeparam name="T">The type of the object to compare.</typeparam>
+        </member>
+        <member name="M:ArtemisWest.ISpecification`1.IsSatisfiedBy(`0)">
+            <summary>
+            Determines whether the candidate is satisfied by the specification.
+            </summary>
+            <param name="candidate">The candidate.</param>
+            <returns>
+            	<c>true</c> if the specified candidate mets the specification; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:ArtemisWest.ISpecification`1.And(ArtemisWest.ISpecification{`0})">
+            <summary>
+            Determines whether the candidate is satisfied by this specification and a further specification.
+            </summary>
+            <param name="other">The other specification to be met.</param>
+            <returns>
+                <c>true</c> if the specified candidate mets both specifications; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:ArtemisWest.ISpecification`1.AndNot(ArtemisWest.ISpecification{`0})">
+            <summary>
+            Determines whether the candidate is satisfied by this specification, but not a further specification.
+            </summary>
+            <param name="other">The other specification which may not be met.</param>
+            <returns>
+                <c>true</c> if the specified candidate mets this specification and not the <paramref name="other"/> specification; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:ArtemisWest.ISpecification`1.Or(ArtemisWest.ISpecification{`0})">
+            <summary>
+            Determines whether the candidate is satisfied by either this specification or a further specification.
+            </summary>
+            <param name="other">The other specification to be met.</param>
+            <returns>
+                <c>true</c> if the specified candidate mets at least one of the specifications; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:ArtemisWest.ISpecification`1.Not">
+            <summary>
+            Determines whether the candidate is not satisfied by this specification.
+            </summary>
+            <returns>
+                <c>false</c> if the specified candidate mets this specification; otherwise, <c>true</c>.
+            </returns>
+        </member>
+        <member name="T:ArtemisWest.Specification`1">
+            <summary>
+            Provides default implementations of the auxilary methods on the <see cref="T:ArtemisWest.ISpecification`1"/> interface.
+            </summary>
+            <typeparam name="T">The type of the object to compare.</typeparam>
+        </member>
+        <member name="M:ArtemisWest.Specification`1.IsSatisfiedBy(`0)">
+            <summary>
+            Determines whether the candidate is satisfied by the specification.
+            </summary>
+            <param name="candidate">The candidate.</param>
+            <returns>
+            	<c>true</c> if the specified candidate mets the specification; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:ArtemisWest.Specification`1.And(ArtemisWest.ISpecification{`0})">
+            <summary>
+            Determines whether the candidate is satisfied by this specification and a further specification.
+            </summary>
+            <param name="other">The other specification to be met.</param>
+            <returns>
+            	<c>true</c> if the specified candidate mets both specifications; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:ArtemisWest.Specification`1.AndNot(ArtemisWest.ISpecification{`0})">
+            <summary>
+            Determines whether the candidate is satisfied by this specification, but not a further specification.
+            </summary>
+            <param name="other">The other specification which may not be met.</param>
+            <returns>
+            	<c>true</c> if the specified candidate mets this specification and not the <paramref name="other"/> specification; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:ArtemisWest.Specification`1.Or(ArtemisWest.ISpecification{`0})">
+            <summary>
+            Determines whether the candidate is satisfied by either this specification or a further specification.
+            </summary>
+            <param name="other">The other specification to be met.</param>
+            <returns>
+            	<c>true</c> if the specified candidate mets at least one of the specifications; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:ArtemisWest.Specification`1.Not">
+            <summary>
+            Determines whether the candidate is not satisfied by this specification.
+            </summary>
+            <returns>
+            	<c>false</c> if the specified candidate mets this specification; otherwise, <c>true</c>.
+            </returns>
+        </member>
+    </members>
+</doc>

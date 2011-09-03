@@ -1,0 +1,7 @@
+I want to be able to have 
+   Weekly Income, 
+   CaptialValue, 
+   RemainingDebt, 
+   NetPosition
+   
+ charts all working asap

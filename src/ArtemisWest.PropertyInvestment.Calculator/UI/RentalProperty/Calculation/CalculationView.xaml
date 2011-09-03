@@ -1,0 +1,31 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:Calculation="clr-namespace:ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculation" xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" xmlns:Controls="clr-namespace:ArtemisWest.PropertyInvestment.Calculator.Controls">
+    <DataTemplate DataType="{x:Type Calculation:CalculationViewModel}">
+        <DataTemplate.Resources>
+            <Controls:DivisionConverter x:Key="DivisionConverter"/>
+        </DataTemplate.Resources>
+        <chartingToolkit:Chart Name="CalculationChart">
+
+            <!--TODO: I have no fucking idea how to set the Title. Wasted an hour on it so far. Works on Mayfair0.1 tho?!-->
+            <!--TODO: Create a ChartRegion Adapter or custom ItemsControl So I can drop multiple Charts on the same space for comparisons.-->
+            <chartingToolkit:LineSeries Title="{Binding Title}"
+                                        DependentValuePath="Value"
+                                        IndependentValuePath="Date" >
+                <chartingToolkit:LineSeries.Resources>
+                    <Controls:CollectionSizeFilter x:Key="FilteredBalances" 
+                                                   Source="{Binding ResultOverTime}" 
+                                                   MaxItemCount="{Binding 
+                                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type chartingToolkit:Chart}}, 
+                                                        Path=ActualWidth, 
+                                                        Converter={StaticResource DivisionConverter}, 
+                                                        ConverterParameter=25}"/>
+                </chartingToolkit:LineSeries.Resources>
+
+                <chartingToolkit:LineSeries.ItemsSource >
+                    <Binding Source="{StaticResource FilteredBalances}"/>
+                </chartingToolkit:LineSeries.ItemsSource>
+            </chartingToolkit:LineSeries>
+
+        </chartingToolkit:Chart>
+    </DataTemplate>
+</ResourceDictionary>
