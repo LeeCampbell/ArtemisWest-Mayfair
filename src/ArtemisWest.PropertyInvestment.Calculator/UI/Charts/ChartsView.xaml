@@ -1,0 +1,22 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                    xmlns:prism="clr-namespace:Microsoft.Practices.Prism.Regions;assembly=Microsoft.Practices.Prism" 
+                    xmlns:local="clr-namespace:ArtemisWest.PropertyInvestment.Calculator" 
+                    xmlns:Charts="clr-namespace:ArtemisWest.PropertyInvestment.Calculator.UI.Charts">
+
+    <!--<DataTemplate DataType="{x:Type Charts:ChartsViewModel}">
+        <UniformGrid x:Name="PropertyInvestmentChartsPanel" Columns="2">
+            <ContentControl x:Name="BalanceChartRegion"
+                        Grid.ColumnSpan="2"
+                        prism:RegionManager.RegionName="{x:Static local:RegionNames.BalanceChartRegion}"/>
+            <ContentControl x:Name="PrincipalRemainingChartRegion"
+                        prism:RegionManager.RegionName="{x:Static local:RegionNames.PrincipalRemainingChartRegion}"/>
+            <ContentControl x:Name="CapitalValueChartRegion"
+                        prism:RegionManager.RegionName="{x:Static local:RegionNames.CapitalValueChartRegion}"/>
+            <ContentControl x:Name="TotalExpensesChartRegion"
+                        prism:RegionManager.RegionName="{x:Static local:RegionNames.TotalExpensesChartRegion}"/>
+            <ContentControl x:Name="MinimumPaymentChartRegion"
+                        prism:RegionManager.RegionName="{x:Static local:RegionNames.MinimumPaymentChartRegion}"/>
+        </UniformGrid>
+    </DataTemplate>-->
+</ResourceDictionary>

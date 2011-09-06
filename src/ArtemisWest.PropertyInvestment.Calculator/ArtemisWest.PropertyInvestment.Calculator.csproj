@@ -40,6 +40,9 @@
     <Reference Include="Lzma.Silverlight">
       <HintPath>..\..\lib\ArtemisWest\Lzma.Silverlight.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.Prism">
       <HintPath>..\..\packages\Prism.4.0.0.0\lib\NET40\Microsoft.Practices.Prism.dll</HintPath>
     </Reference>
@@ -85,6 +88,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\ChartRegionAdapter.cs" />
+    <Compile Include="Controls\ChartSeriesSyncBehavior.cs" />
     <Compile Include="Controls\CollectionSizeFilter.cs" />
     <Compile Include="Controls\DivisionConverter.cs" />
     <Compile Include="Controls\PercentageConverter.cs" />
@@ -92,13 +97,22 @@
     <Compile Include="Entities\Position.cs" />
     <Compile Include="Entities\PositionViewModel.cs" />
     <Compile Include="Entities\Transaction.cs" />
+    <Compile Include="RegionNames.cs" />
     <Compile Include="Repository\Entities\DailyCompoundedPaidWeekly.cs" />
     <Compile Include="Repository\IDailyCompoundedMortgageRepository.cs" />
     <Compile Include="Repository\DailyCompoundedMortgageRepository.cs" />
     <Compile Include="Repository\Entities\Row.cs" />
+    <Compile Include="UI\Charts\ChartRegionsView.xaml.cs">
+      <DependentUpon>ChartRegionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Charts\ChartsPresenter.cs" />
     <Compile Include="UI\RentalProperty\Calculation\CalculationViewModel.cs" />
     <Compile Include="UI\RentalProperty\RentalPropertyController.cs" />
     <Compile Include="UI\RentalProperty\RentalPropertyViewModel.cs" />
+    <Page Include="UI\Charts\ChartRegionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\RentalProperty\Calculation\CalculationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -107,7 +121,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="PropertyInvestmentContainerModule.cs" />
     <Compile Include="PropertyInvestmentModule.cs" />
     <Compile Include="UI\RentalProperty\Input\IRentalPropertyInputPresenter.cs" />
     <Compile Include="UI\RentalProperty\Input\RentalPropertyInputPresenter.cs" />

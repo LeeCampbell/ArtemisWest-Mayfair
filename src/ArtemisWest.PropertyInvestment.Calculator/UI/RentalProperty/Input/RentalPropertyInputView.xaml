@@ -17,16 +17,18 @@
                 <TextBox Text="{Binding InitialCapitalValue}"/>
             </DockPanel>
             <Slider Minimum="0" Maximum="1000000" Value="{Binding InitialCapitalValue}" SmallChange="1000" LargeChange="5000" IsSnapToTickEnabled="True" TickFrequency="100"/>
+            
             <DockPanel LastChildFill="False">
                 <Label>Loan amount</Label>
                 <TextBox Text="{Binding InitialLoanAmount}" />
             </DockPanel>
             <Slider Minimum="0" Maximum="1000000" Value="{Binding InitialLoanAmount}" SmallChange="1000" LargeChange="5000" IsSnapToTickEnabled="True" TickFrequency="100"/>
+            
             <DockPanel LastChildFill="False">
                 <Label>Interest Rate</Label>
                 <TextBox Text="{Binding LoanInterestRate, Converter={StaticResource percentageConverter}}" />
             </DockPanel>
-            <Slider Minimum="0" Maximum="0.2" Value="{Binding LoanInterestRate}" SmallChange="0.001" LargeChange="0.01"  IsSnapToTickEnabled="True" TickFrequency="0.0005"/>
+            <Slider Minimum="0" Maximum="0.0995" Value="{Binding LoanInterestRate}" SmallChange="0.001" LargeChange="0.01"  IsSnapToTickEnabled="True" TickFrequency="0.0005"/>
 
             <DockPanel LastChildFill="False">
                 <Label>Capital Growth</Label>

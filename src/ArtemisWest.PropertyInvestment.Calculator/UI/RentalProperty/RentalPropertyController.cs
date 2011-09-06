@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
-using ArtemisWest.Mayfair.Infrastructure;
+using ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculation;
 using Microsoft.Practices.Prism.Regions;
 
 namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
 {
     public sealed class RentalPropertyController
     {
+        private static int Counter = 0;
+
         private readonly IRegionManager _regionManager;
         private readonly RentalPropertyViewModel _viewModel = new RentalPropertyViewModel();
 
@@ -19,7 +16,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
             _regionManager = regionManager;
 
             //TODO: Get from some local cache, like a cookie. ie whatever they typed last.
-
+            _viewModel.Title = string.Format("Series {0}", ++Counter);
             _viewModel.Loaded()
                 .Subscribe(_ => { },
                 () =>
@@ -28,9 +25,6 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                     _viewModel.Input.InitialLoanAmount = 413000m;
                     _viewModel.Input.LoanInterestRate = 0.065m;
                 });
-
-
-
         }
 
         public RentalPropertyViewModel ViewModel
@@ -46,12 +40,19 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                 () =>
                 {
                     _regionManager.AddToRegion(RegionNames.MainInputRegion, ViewModel.Input);
-                    _regionManager.AddToRegion(RegionNames.MainChartRegion, ViewModel.PrincipalRemaining);
-                    _regionManager.AddToRegion(RegionNames.MainChartRegion, ViewModel.CapitalValue);
-                    _regionManager.AddToRegion(RegionNames.MainChartRegion, ViewModel.TotalExpenses);
-                    _regionManager.AddToRegion(RegionNames.MainChartRegion, ViewModel.MinimumPayment);
-                    _regionManager.AddToRegion(RegionNames.MainChartRegion, ViewModel.Balance);
+                    ShowChart(RegionNames.PrincipalRemainingChartRegion, ViewModel.PrincipalRemaining);
+                    ShowChart(RegionNames.CapitalValueChartRegion, ViewModel.CapitalValue);
+                    ShowChart(RegionNames.TotalExpensesChartRegion, ViewModel.TotalExpenses);
+                    ShowChart(RegionNames.MinimumPaymentChartRegion, ViewModel.MinimumPayment);
+                    ShowChart(RegionNames.BalanceChartRegion, ViewModel.Balance);
                 });
+        }
+
+        private void ShowChart(string region, CalculationViewModel calculationViewModel)
+        {
+            //var view = new CalculationViewControl() {ViewModel = calculationViewModel};
+            //_regionManager.AddToRegion(region, view);
+            _regionManager.AddToRegion(region, calculationViewModel);
         }
 
         #endregion

@@ -5,3 +5,17 @@ I want to be able to have
    NetPosition
    
  charts all working asap
+ 
+ 
+ NuGet
+  Prism
+  Rx
+  nUnit
+  Moq
+  Rxx?
+  
+Have a local teamcity that builds. Version 1.0.{SVNRevision}
+  AW.Core
+  AW.Presentation - Take the PercentageConverter into the AW.Pres
+  
+  

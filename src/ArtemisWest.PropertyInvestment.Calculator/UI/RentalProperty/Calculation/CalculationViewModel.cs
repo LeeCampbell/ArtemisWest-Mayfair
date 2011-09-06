@@ -47,5 +47,19 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculatio
             }
         }
 
+        //TODO: This will belong on the RegionAdapter for the Chart (that will be an ItemsControl/ISeriesHost that is loaded with LineSeries)
+        private bool _isLegendVisible;
+        public bool IsLegendVisible
+        {
+            get { return _isLegendVisible; }
+            set
+            {
+                if (_isLegendVisible != value)
+                {
+                    _isLegendVisible = value;
+                    RaisePropertyChanged(() => IsLegendVisible);
+                }
+            }
+        }
     }
 }

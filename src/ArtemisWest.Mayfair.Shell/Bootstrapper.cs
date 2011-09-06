@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls.DataVisualization.Charting;
+//using ArtemisWest.Mayfair.Shell.Controls;
 using ArtemisWest.PropertyInvestment.Calculator;
-//using Autofac;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Prism.UnityExtensions;
-//using Microsoft.Practices.ServiceLocation;
+using Microsoft.Practices.ServiceLocation;
 
 namespace ArtemisWest.Mayfair.Shell
 {
@@ -29,8 +30,21 @@ namespace ArtemisWest.Mayfair.Shell
             base.ConfigureModuleCatalog();
             ModuleCatalog.AddModule<PropertyInvestmentModule>();
         }
+        //protected override Microsoft.Practices.Prism.Regions.IRegionBehaviorFactory ConfigureDefaultRegionBehaviors()
+        //{
+        //    var defaultRegionBehaviorFactory =  base.ConfigureDefaultRegionBehaviors();
+        //    defaultRegionBehaviorFactory.AddIfMissing(ChartSeriesSyncBehavior.BehaviorKey, typeof(ChartSeriesSyncBehavior));
+        //    return defaultRegionBehaviorFactory;
+        //}
+        //protected override Microsoft.Practices.Prism.Regions.RegionAdapterMappings ConfigureRegionAdapterMappings()
+        //{
+        //    var instance =  base.ConfigureRegionAdapterMappings();
+        //    instance.RegisterMapping(typeof(Chart), ServiceLocator.Current.GetInstance<ChartRegionAdapter>());
+        //    return instance;
+        //}
         #endregion
     }
+
     public static class ModuleCatalogExtensions
     {
         public static void AddModule<T>(this IModuleCatalog moduleCatalog) where T:IModule
@@ -39,41 +53,4 @@ namespace ArtemisWest.Mayfair.Shell
             moduleCatalog.AddModule(new ModuleInfo(moduleType.Name, moduleType.AssemblyQualifiedName));
         }
     }
-
-
-    //class Bootstrapper : Microsoft.Practices.Prism.Bootstrapper
-    //{
-    //    #region Overrides of Bootstrapper
-
-    //    public override void Run(bool runWithDefaultConfiguration)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-
-    //    protected override DependencyObject CreateShell()
-    //    {
-    //        return ServiceLocator.Current.GetInstance<Shell>();
-    //    }
-
-    //    protected override void ConfigureServiceLocator()
-    //    {
-    //        var builder = new ContainerBuilder();
-
-    //        builder.RegisterType<RegionManager>().As<IRegionManager>();
-
-    //        var container = builder.Build();
-    //        var serviceLocator = new AutofacContrib.CommonServiceLocator.AutofacServiceLocator(container);
-    //        ServiceLocator.SetLocatorProvider(()=>serviceLocator);
-    //    }
-
-        
-    //    protected override void InitializeShell()
-    //    {
-    //        Application.Current.MainWindow = (Window)Shell;
-    //        Application.Current.MainWindow.Show();
-
-    //        base.InitializeShell();            
-    //    }
-    //    #endregion
-    //}
 }

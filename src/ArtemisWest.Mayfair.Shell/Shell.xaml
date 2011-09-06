@@ -5,21 +5,14 @@
         xmlns:Infrastructure="clr-namespace:ArtemisWest.Mayfair.Infrastructure;assembly=ArtemisWest.Mayfair.Infrastructure" 
         Title="Mayfair" 
         Height="750" Width="925">
-    <DockPanel>
-        <ItemsControl x:Name="InputPanel" DockPanel.Dock="Left" 
+    <DockPanel LastChildFill="True">
+        <ItemsControl x:Name="InputPanel" 
+                      DockPanel.Dock="Left" 
                       prism:RegionManager.RegionName="{x:Static Infrastructure:RegionNames.MainInputRegion}"/>
 
         <!-- Add the toolbar to be able set up the workspace as you like (ie buttons that set the Uniform Grid's Rows/Cols etc... -->
-        <!--<ContentControl x:Name="ChartsPanel"
-                          prism:RegionManager.RegionName="{x:Static Infrastructure:RegionNames.MainChartRegion}"/>-->
-        <ItemsControl x:Name="ChartsPanel"
-                      prism:RegionManager.RegionName="{x:Static Infrastructure:RegionNames.MainChartRegion}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Columns="1"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
+        <ContentControl x:Name="ChartsPanel"
+                        prism:RegionManager.RegionName="{x:Static Infrastructure:RegionNames.MainChartRegion}"/>
     </DockPanel>
 
 </Window>

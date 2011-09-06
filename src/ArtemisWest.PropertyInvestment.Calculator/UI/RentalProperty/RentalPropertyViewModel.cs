@@ -18,14 +18,14 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
         private readonly DailyCompoundedMortgageRepository _mortgageRepository;
 
         private readonly RentalPropertyInputViewModel _input = new RentalPropertyInputViewModel();
-        private readonly CalculationViewModel _principalRemaining = new CalculationViewModel(TermInDays) { Title = "Principal Remaining" };
-        private readonly CalculationViewModel _minimumPayment = new CalculationViewModel(TermInDays) { Title = "Minimum Payment" };
-        private readonly CalculationViewModel _capitalValue = new CalculationViewModel(TermInDays) { Title = "Capital value" };
-        private readonly CalculationViewModel _totalIncome = new CalculationViewModel(TermInDays) { Title = "Total Income" };
-        private readonly CalculationViewModel _totalExpenses = new CalculationViewModel(TermInDays) { Title = "Total Expenses" };
-        private readonly CalculationViewModel _balance = new CalculationViewModel(TermInDays) { Title = "Balance" };
-        private readonly CalculationViewModel _monthlyIncome = new CalculationViewModel(TermInDays) { Title = "Monthly Income" };
-        private readonly CalculationViewModel _monthlyExpenses = new CalculationViewModel(TermInDays) { Title = "Monthly Expenses" };
+        private readonly CalculationViewModel _principalRemaining = new CalculationViewModel(TermInDays);
+        private readonly CalculationViewModel _minimumPayment = new CalculationViewModel(TermInDays);
+        private readonly CalculationViewModel _capitalValue = new CalculationViewModel(TermInDays);
+        private readonly CalculationViewModel _totalIncome = new CalculationViewModel(TermInDays);
+        private readonly CalculationViewModel _totalExpenses = new CalculationViewModel(TermInDays);
+        private readonly CalculationViewModel _balance = new CalculationViewModel(TermInDays);
+        private readonly CalculationViewModel _monthlyIncome = new CalculationViewModel(TermInDays);
+        private readonly CalculationViewModel _monthlyExpenses = new CalculationViewModel(TermInDays);
 
         private IDisposable _currentEvaluation;
         private readonly IDisposable _inputChangeSubscription;
@@ -195,6 +195,30 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
         public CalculationViewModel MonthlyExpenses
         {
             get { return _monthlyExpenses; }
+        }
+
+        private string _title;
+
+        public string Title
+        {
+            get { return _title; }
+            set
+            {
+                if (_title != value)
+                {
+                    _title = value;
+                    RaisePropertyChanged(() => Title);
+
+                    _principalRemaining.Title = value;
+                    _minimumPayment.Title = value;
+                    _capitalValue.Title = value;
+                    _totalIncome.Title = value;
+                    _totalExpenses.Title = value;
+                    _balance.Title = value;
+                    _monthlyIncome.Title = value;
+                    _monthlyExpenses.Title = value;
+                }
+            }
         }
 
         #region Implementation of IDisposable
