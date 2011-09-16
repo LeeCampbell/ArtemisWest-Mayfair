@@ -59,7 +59,20 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Input
                 }
             }
         }
-        
+
+        private string _title;
+        public string Title
+        {
+            get { return _title; }
+            set
+            {
+                if (_title != value)
+                {
+                    _title = value;
+                    RaisePropertyChanged(() => Title);
+                }
+            }
+        }
         //TODO: Add loan term. Changes to this would obviously need to correct the length of the Balances collections. Tere4 they could not be arrays anymore.
     }
 }

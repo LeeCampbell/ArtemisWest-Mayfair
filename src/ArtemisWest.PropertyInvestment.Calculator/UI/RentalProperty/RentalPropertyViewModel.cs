@@ -15,7 +15,8 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
     public class RentalPropertyViewModel : NotificationObject, IDisposable
     {
         private const int TermInDays = 10958;   //365.25 * 30;
-        private readonly DailyCompoundedMortgageRepository _mortgageRepository;
+        private readonly IDailyCompoundedMortgageRepository _mortgageRepository;
+        private IScheduler _dispatcherScheduler;
 
         private readonly RentalPropertyInputViewModel _input = new RentalPropertyInputViewModel();
         private readonly CalculationViewModel _principalRemaining = new CalculationViewModel(TermInDays);
@@ -29,31 +30,39 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
 
         private IDisposable _currentEvaluation;
         private readonly IDisposable _inputChangeSubscription;
-        private IConnectableObservable<Unit> _isRepoLoaded;
 
-        public RentalPropertyViewModel()
+        public RentalPropertyViewModel() :this(new DailyCompoundedMortgageRepository())
         {
-            _mortgageRepository = new DailyCompoundedMortgageRepository();
+            
+        }
+        public RentalPropertyViewModel(IDailyCompoundedMortgageRepository mortgageRepository)
+        {
+            _mortgageRepository = mortgageRepository;
+            _dispatcherScheduler = DispatcherScheduler.Instance;
             var inputPropertyChanges =
                     Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
                         eh => eh.Invoke,
                         eh => Input.PropertyChanged += eh,
                         eh => Input.PropertyChanged -= eh);
 
-            _inputChangeSubscription = inputPropertyChanges
-                .Subscribe(_ => Reevaluate());
+            //inputPropertyChanges
+            //    .Where(e => e.EventArgs.PropertyName == "Title")
+            //    //.Subscribe(_ => RaisePropertyChanged("Title"));
+            //    .Subscribe(_ => Title = _input.Title);
 
-            _isRepoLoaded = _mortgageRepository
-                .Load()
-                .SubscribeOn(Scheduler.ThreadPool)
-                .ObserveOnDispatcher()
-                .PublishLast();
-            _isRepoLoaded.Connect();
-        }
+            var propertyChanges = inputPropertyChanges.Where(e => e.EventArgs.PropertyName != "Title");
+            var repoIsLoaded = _mortgageRepository.IsLoaded
+                .Where(isLoaded => isLoaded);
 
-        public IObservable<Unit> Loaded()
-        {
-            return _isRepoLoaded;
+            _inputChangeSubscription = 
+                Observable.CombineLatest(
+                        repoIsLoaded,
+                        propertyChanges,
+                        (isLoaded, propertyChanged) => Unit.Default
+                    )
+                    .Subscribe(_ => Reevaluate());
+
+            _mortgageRepository.Load();
         }
 
         private void Reevaluate()
@@ -91,11 +100,11 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                             interestAccrued = 0m;
                             principalRemaining = principalRemaining + interestCharged;
                         }
-                        if(date.DayOfWeek==DayOfWeek.Friday)
+                        if (date.DayOfWeek == DayOfWeek.Friday)
                         {
                             principalRemaining = principalRemaining - monthlyPayment;
                         }
-                        if(principalRemaining<0)
+                        if (principalRemaining < 0)
                         {
                             principalRemaining = 0m;
                         }
@@ -113,9 +122,10 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                                    };
                     }
                 )
-                .Buffer(500)    //Batch calls to the Dispatcher, to lighten the load on the Charting control.
+                //TODO: Make this dynamicaly batch depending on the system/dispatcher load.
+                .Buffer(200)    //Batch calls to the Dispatcher, to lighten the load on the Charting control.
                 .SubscribeOn(Scheduler.ThreadPool)
-                .ObserveOn(DispatcherScheduler.Instance)
+                .ObserveOn(_dispatcherScheduler)
                 .Subscribe(kvps =>
                                {
                                    foreach (var kvp in kvps)
@@ -143,7 +153,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
 
         public decimal GetMinimumPayment(decimal principal, int termInDays, decimal interestRate)
         {
-            if(principal<=0)
+            if (principal <= 0)
             {
                 return 0m;
             }
@@ -198,26 +208,17 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
         }
 
         private string _title;
-
         public string Title
         {
             get { return _title; }
             set
             {
-                if (_title != value)
+                if (value != _title)
                 {
                     _title = value;
                     RaisePropertyChanged(() => Title);
-
-                    _principalRemaining.Title = value;
-                    _minimumPayment.Title = value;
-                    _capitalValue.Title = value;
-                    _totalIncome.Title = value;
-                    _totalExpenses.Title = value;
-                    _balance.Title = value;
-                    _monthlyIncome.Title = value;
-                    _monthlyExpenses.Title = value;
                 }
+
             }
         }
 

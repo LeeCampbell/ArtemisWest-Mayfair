@@ -10,31 +10,33 @@
                 <Setter Property="TextAlignment" Value="Right"/>
             </Style>
         </DataTemplate.Resources>
-        
-        <StackPanel>
-            <DockPanel LastChildFill="False">
-                <Label>Captial Value</Label>
-                <TextBox Text="{Binding InitialCapitalValue}"/>
-            </DockPanel>
-            <Slider Minimum="0" Maximum="1000000" Value="{Binding InitialCapitalValue}" SmallChange="1000" LargeChange="5000" IsSnapToTickEnabled="True" TickFrequency="100"/>
-            
-            <DockPanel LastChildFill="False">
-                <Label>Loan amount</Label>
-                <TextBox Text="{Binding InitialLoanAmount}" />
-            </DockPanel>
-            <Slider Minimum="0" Maximum="1000000" Value="{Binding InitialLoanAmount}" SmallChange="1000" LargeChange="5000" IsSnapToTickEnabled="True" TickFrequency="100"/>
-            
-            <DockPanel LastChildFill="False">
-                <Label>Interest Rate</Label>
-                <TextBox Text="{Binding LoanInterestRate, Converter={StaticResource percentageConverter}}" />
-            </DockPanel>
-            <Slider Minimum="0" Maximum="0.0995" Value="{Binding LoanInterestRate}" SmallChange="0.001" LargeChange="0.01"  IsSnapToTickEnabled="True" TickFrequency="0.0005"/>
+        <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Margin="1,1,1,2" Padding="2">
+            <StackPanel>
+                <TextBox Text="{Binding Title,FallbackValue=Title}" HorizontalAlignment="Stretch" TextAlignment="Left"/>
+                <DockPanel LastChildFill="False">
+                    <Label>Captial Value</Label>
+                    <TextBox Text="{Binding InitialCapitalValue}"/>
+                </DockPanel>
+                <Slider Minimum="0" Maximum="1000000" Value="{Binding InitialCapitalValue}" SmallChange="1000" LargeChange="5000" IsSnapToTickEnabled="True" TickFrequency="100"/>
 
-            <DockPanel LastChildFill="False">
-                <Label>Capital Growth</Label>
-                <TextBox Text="{Binding CaptialGrowth, Converter={StaticResource percentageConverter}}" />
-            </DockPanel>
-            <Slider Minimum="0" Maximum="0.1" Value="{Binding CaptialGrowth}" SmallChange="0.001" LargeChange="0.01"  IsSnapToTickEnabled="True" TickFrequency="0.0005"/>
-        </StackPanel>
+                <DockPanel LastChildFill="False">
+                    <Label>Loan amount</Label>
+                    <TextBox Text="{Binding InitialLoanAmount}" />
+                </DockPanel>
+                <Slider Minimum="0" Maximum="1000000" Value="{Binding InitialLoanAmount}" SmallChange="1000" LargeChange="5000" IsSnapToTickEnabled="True" TickFrequency="100"/>
+
+                <DockPanel LastChildFill="False">
+                    <Label>Interest Rate</Label>
+                    <TextBox Text="{Binding LoanInterestRate, Converter={StaticResource percentageConverter}}" />
+                </DockPanel>
+                <Slider Minimum="0" Maximum="0.25" Value="{Binding LoanInterestRate}" SmallChange="0.001" LargeChange="0.01"  IsSnapToTickEnabled="True" TickFrequency="0.0005"/>
+
+                <DockPanel LastChildFill="False">
+                    <Label>Capital Growth</Label>
+                    <TextBox Text="{Binding CaptialGrowth, Converter={StaticResource percentageConverter}}" />
+                </DockPanel>
+                <Slider Minimum="0" Maximum="0.1" Value="{Binding CaptialGrowth}" SmallChange="0.001" LargeChange="0.01"  IsSnapToTickEnabled="True" TickFrequency="0.0005"/>
+            </StackPanel>
+        </Border>
     </DataTemplate>
 </ResourceDictionary>

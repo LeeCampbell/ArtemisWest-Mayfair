@@ -28,14 +28,15 @@ namespace ArtemisWest.PropertyInvestment.Calculator
 
             _container.RegisterType<IModule, PropertyInvestmentModule>();
             _container.RegisterType<IRentalPropertyInputPresenter, RentalPropertyInputPresenter>();
+            _container.RegisterInstance<Repository.IDailyCompoundedMortgageRepository>(new Repository.DailyCompoundedMortgageRepository());
 
             LoadViews();
 
-            var inputControler = _container.Resolve<RentalPropertyController>();
-            inputControler.Show();
-
             var chartsPresenter = _container.Resolve<UI.Charts.ChartsPresenter>();
             chartsPresenter.Show();
+
+            var inputControler = _container.Resolve<RentalPropertyController>();
+            inputControler.Show();
 
             var inputControler2 = _container.Resolve<RentalPropertyController>();
             inputControler2.Show();
@@ -43,9 +44,9 @@ namespace ArtemisWest.PropertyInvestment.Calculator
 
         #endregion
 
-        private void ConfigureRegionManager()
+        private static void ConfigureRegionManager()
         {
-            RegionAdapterMappings instance = ServiceLocator.Current.GetInstance<RegionAdapterMappings>();
+            var instance = ServiceLocator.Current.GetInstance<RegionAdapterMappings>();
             instance.RegisterMapping(typeof(Chart), ServiceLocator.Current.GetInstance<ChartRegionAdapter>());
         }
 

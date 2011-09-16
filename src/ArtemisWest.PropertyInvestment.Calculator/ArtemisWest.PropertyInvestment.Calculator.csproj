@@ -102,6 +102,7 @@
     <Compile Include="Repository\IDailyCompoundedMortgageRepository.cs" />
     <Compile Include="Repository\DailyCompoundedMortgageRepository.cs" />
     <Compile Include="Repository\Entities\Row.cs" />
+    <Compile Include="Timer.cs" />
     <Compile Include="UI\Charts\ChartRegionsView.xaml.cs">
       <DependentUpon>ChartRegionsView.xaml</DependentUpon>
     </Compile>

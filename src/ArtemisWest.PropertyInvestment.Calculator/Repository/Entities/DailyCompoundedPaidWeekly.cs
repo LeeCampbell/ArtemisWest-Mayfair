@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -15,22 +16,51 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Repository.Entities
 
         public DailyCompoundedPaidWeekly()
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            var dataPrefix = string.Format("{0}.Data.DailyCompounded_PaidWeekly", assembly.GetName().Name);
+            using (new Timer("DailyCompoundedPaidWeekly.ctor()"))
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                var dataPrefix = string.Format("{0}.Data.DailyCompounded_PaidWeekly", assembly.GetName().Name);
 
-            var query = from resourcePath in assembly.GetManifestResourceNames()
-                            .Where(res => res.StartsWith(dataPrefix))
-                            .OrderBy(i => i)
-                        let resource = assembly.GetManifestResourceStream(resourcePath)
-                        let byteArray = ReadFully(resource)
-                        let csvContent = DecompressToString(byteArray)
-                        from line in Enumerable.Skip(csvContent.Split(
+                var csvFiles = assembly.GetManifestResourceNames()
+                    .Where(res => res.StartsWith(dataPrefix))
+                    //.OrderBy(i => i)
+                    .Select(assembly.GetManifestResourceStream)
+                    .Select(ReadFully)
+                    .Select(DecompressToString);
+
+                var query = from csvContent in csvFiles
+                            from line in Enumerable.Skip(csvContent.Split(
                                 new[] { Environment.NewLine },
                                 StringSplitOptions.RemoveEmptyEntries
-                                               ), 1) //Skip the header row
-                        select Row.New(line);
+                                                             ), 1)
+                            //Skip the header row
+                            select Row.New(line);
 
-            _data = new ReadOnlyCollection<Row>(query.ToList());
+                //var query = from resourcePath in assembly.GetManifestResourceNames()
+                //                .Where(res => res.StartsWith(dataPrefix))
+                //                .OrderBy(i => i)
+                //            let resource = assembly.GetManifestResourceStream(resourcePath)
+                //            let byteArray = ReadFully(resource)
+                //            let csvContent = DecompressToString(byteArray)
+                //            from line in Enumerable.Skip(csvContent.Split(
+                //                new[] { Environment.NewLine },
+                //                StringSplitOptions.RemoveEmptyEntries
+                //                                             ), 1)
+                //            //Skip the header row
+                //            select Row.New(line);
+
+                IList<Row> rows;
+                //using (new Timer("query.ToList()"))
+                //{
+                //    rows = query.ToList();    
+                //}
+                using (new Timer("query.ToArray()"))
+                {
+                    rows = query.ToArray();
+                }
+                
+                _data = new ReadOnlyCollection<Row>(rows);
+            }
         }
 
         public IEnumerable<Row> Data
@@ -40,22 +70,28 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Repository.Entities
 
         private static byte[] ReadFully(Stream input)
         {
-            var buffer = new byte[16 * 1024];
-            using (var ms = new MemoryStream())
+            using (new Timer("ReadFully"))
             {
-                int read;
-                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                var buffer = new byte[16 * 1024];
+                using (var ms = new MemoryStream())
                 {
-                    ms.Write(buffer, 0, read);
+                    int read;
+                    while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        ms.Write(buffer, 0, read);
+                    }
+                    return ms.ToArray();
                 }
-                return ms.ToArray();
             }
         }
 
         private static string DecompressToString(byte[] zipConents)
         {
-            var binaryContents = SevenZipHelper.Decompress(zipConents);
-            return new UTF8Encoding().GetString(binaryContents);
+            using (new Timer("DecompressToString"))
+            {
+                var binaryContents = SevenZipHelper.Decompress(zipConents);
+                return new UTF8Encoding().GetString(binaryContents);
+            }
         }
     }
 }
