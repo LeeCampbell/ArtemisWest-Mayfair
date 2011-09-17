@@ -26,9 +26,10 @@ namespace ArtemisWest.PropertyInvestment.Calculator
         {
             ConfigureRegionManager();
 
+            var singleton = new ContainerControlledLifetimeManager();
             _container.RegisterType<IModule, PropertyInvestmentModule>();
             _container.RegisterType<IRentalPropertyInputPresenter, RentalPropertyInputPresenter>();
-            _container.RegisterInstance<Repository.IDailyCompoundedMortgageRepository>(new Repository.DailyCompoundedMortgageRepository());
+            _container.RegisterType<Repository.IDailyCompoundedMortgageRepository, Repository.DailyCompoundedMortgageRepository>(singleton);
 
             LoadViews();
 

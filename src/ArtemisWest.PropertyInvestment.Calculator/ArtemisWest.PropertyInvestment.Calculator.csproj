@@ -98,7 +98,7 @@
     <Compile Include="Entities\PositionViewModel.cs" />
     <Compile Include="Entities\Transaction.cs" />
     <Compile Include="RegionNames.cs" />
-    <Compile Include="Repository\Entities\DailyCompoundedPaidWeekly.cs" />
+    <Compile Include="Repository\DailyCompoundedPaidWeeklyDataLoader.cs" />
     <Compile Include="Repository\IDailyCompoundedMortgageRepository.cs" />
     <Compile Include="Repository\DailyCompoundedMortgageRepository.cs" />
     <Compile Include="Repository\Entities\Row.cs" />

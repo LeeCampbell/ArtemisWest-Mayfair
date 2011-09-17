@@ -73,6 +73,6 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Input
                 }
             }
         }
-        //TODO: Add loan term. Changes to this would obviously need to correct the length of the Balances collections. Tere4 they could not be arrays anymore.
+        //TODO: Add loan term. Changes to this would obviously need to correct the length of the Balances collections. There4 they could not be arrays anymore.
     }
 }

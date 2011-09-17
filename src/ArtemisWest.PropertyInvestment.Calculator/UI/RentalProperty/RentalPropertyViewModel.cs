@@ -2,9 +2,8 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reactive;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
+using ArtemisWest.Mayfair.Infrastructure;
 using ArtemisWest.PropertyInvestment.Calculator.Repository;
 using ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculation;
 using ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Input;
@@ -16,7 +15,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
     {
         private const int TermInDays = 10958;   //365.25 * 30;
         private readonly IDailyCompoundedMortgageRepository _mortgageRepository;
-        private IScheduler _dispatcherScheduler;
+        private readonly ISchedulerProvider _schedulerProvider;
 
         private readonly RentalPropertyInputViewModel _input = new RentalPropertyInputViewModel();
         private readonly CalculationViewModel _principalRemaining = new CalculationViewModel(TermInDays);
@@ -31,14 +30,11 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
         private IDisposable _currentEvaluation;
         private readonly IDisposable _inputChangeSubscription;
 
-        public RentalPropertyViewModel() :this(new DailyCompoundedMortgageRepository())
-        {
-            
-        }
-        public RentalPropertyViewModel(IDailyCompoundedMortgageRepository mortgageRepository)
+        public RentalPropertyViewModel(IDailyCompoundedMortgageRepository mortgageRepository, ISchedulerProvider schedulerProvider)
         {
             _mortgageRepository = mortgageRepository;
-            _dispatcherScheduler = DispatcherScheduler.Instance;
+            _schedulerProvider = schedulerProvider;
+
             var inputPropertyChanges =
                     Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
                         eh => eh.Invoke,
@@ -54,7 +50,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
             var repoIsLoaded = _mortgageRepository.IsLoaded
                 .Where(isLoaded => isLoaded);
 
-            _inputChangeSubscription = 
+            _inputChangeSubscription =
                 Observable.CombineLatest(
                         repoIsLoaded,
                         propertyChanges,
@@ -63,92 +59,6 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                     .Subscribe(_ => Reevaluate());
 
             _mortgageRepository.Load();
-        }
-
-        private void Reevaluate()
-        {
-            using (_currentEvaluation) { }
-            _currentEvaluation = UpdateValues();
-        }
-
-        private IDisposable UpdateValues()
-        {
-            var yearlyGrowth = Input.CaptialGrowth;
-            var seed = new Accumulator
-                           {
-                               CaptialValue = Input.InitialCapitalValue,
-                               PrincipalRemaining = Input.InitialLoanAmount
-                           };
-
-            var annualInterestRate = Input.LoanInterestRate;
-            var monthlyPayment = GetMinimumPayment(seed.PrincipalRemaining, TermInDays, annualInterestRate);
-
-            return Observable.Range(0, TermInDays)
-                .Scan(
-                    seed,
-                    (acc, i) =>
-                    {
-                        DateTime date = DateTime.Today.AddDays(i);
-                        var daysInYear = date.DaysInYear();
-                        var dailyGrowth = 1m + yearlyGrowth / daysInYear;
-                        var interestAccrued = acc.InterestAccrued + (annualInterestRate * acc.PrincipalRemaining) * (1M / daysInYear);
-                        var interestCharged = 0m;
-                        var principalRemaining = acc.PrincipalRemaining;
-                        if (date.Day == 1)
-                        {
-                            interestCharged = interestAccrued;
-                            interestAccrued = 0m;
-                            principalRemaining = principalRemaining + interestCharged;
-                        }
-                        if (date.DayOfWeek == DayOfWeek.Friday)
-                        {
-                            principalRemaining = principalRemaining - monthlyPayment;
-                        }
-                        if (principalRemaining < 0)
-                        {
-                            principalRemaining = 0m;
-                        }
-                        var minPayment = GetMinimumPayment(acc.PrincipalRemaining, TermInDays - i, annualInterestRate);
-
-                        return new Accumulator
-                                   {
-                                       Index = i,
-                                       CaptialValue = acc.CaptialValue * dailyGrowth,
-                                       InterestAccrued = interestAccrued,
-                                       InterestCharged = interestCharged,
-                                       TotalInterestCharged = acc.TotalInterestCharged + interestCharged,
-                                       MinimumPayment = minPayment,
-                                       PrincipalRemaining = principalRemaining
-                                   };
-                    }
-                )
-                //TODO: Make this dynamicaly batch depending on the system/dispatcher load.
-                .Buffer(200)    //Batch calls to the Dispatcher, to lighten the load on the Charting control.
-                .SubscribeOn(Scheduler.ThreadPool)
-                .ObserveOn(_dispatcherScheduler)
-                .Subscribe(kvps =>
-                               {
-                                   foreach (var kvp in kvps)
-                                   {
-                                       CapitalValue.ResultOverTime[kvp.Index].Value = kvp.CaptialValue;
-                                       TotalExpenses.ResultOverTime[kvp.Index].Value = kvp.TotalInterestCharged;
-                                       MinimumPayment.ResultOverTime[kvp.Index].Value = kvp.MinimumPayment;
-                                       PrincipalRemaining.ResultOverTime[kvp.Index].Value = kvp.PrincipalRemaining;
-                                       Balance.ResultOverTime[kvp.Index].Value = kvp.CaptialValue - kvp.PrincipalRemaining;
-                                   }
-                               },
-                               () => Debug.WriteLine("UpdateValues Completed."));
-        }
-
-        private sealed class Accumulator
-        {
-            public int Index { get; set; }
-            public decimal CaptialValue { get; set; }
-            public decimal PrincipalRemaining { get; set; }
-            public decimal MinimumPayment { get; set; }
-            public decimal InterestAccrued { get; set; }
-            public decimal InterestCharged { get; set; }
-            public decimal TotalInterestCharged { get; set; }
         }
 
         public decimal GetMinimumPayment(decimal principal, int termInDays, decimal interestRate)
@@ -231,5 +141,92 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
         }
 
         #endregion
+
+        private void Reevaluate()
+        {
+            using (_currentEvaluation) { }
+            _currentEvaluation = UpdateValues();
+        }
+
+        private IDisposable UpdateValues()
+        {
+            var yearlyGrowth = Input.CaptialGrowth;
+            var seed = new Accumulator
+            {
+                CaptialValue = Input.InitialCapitalValue,
+                PrincipalRemaining = Input.InitialLoanAmount
+            };
+
+            var annualInterestRate = Input.LoanInterestRate;
+            var monthlyPayment = GetMinimumPayment(seed.PrincipalRemaining, TermInDays, annualInterestRate);
+
+            return Observable.Range(0, TermInDays)
+                .Scan(
+                    seed,
+                    (acc, i) =>
+                    {
+                        DateTime date = DateTime.Today.AddDays(i);
+                        var daysInYear = date.DaysInYear();
+                        var dailyGrowth = 1m + yearlyGrowth / daysInYear;
+                        var interestAccrued = acc.InterestAccrued + (annualInterestRate * acc.PrincipalRemaining) * (1M / daysInYear);
+                        var interestCharged = 0m;
+                        var principalRemaining = acc.PrincipalRemaining;
+                        if (date.Day == 1)
+                        {
+                            interestCharged = interestAccrued;
+                            interestAccrued = 0m;
+                            principalRemaining = principalRemaining + interestCharged;
+                        }
+                        if (date.DayOfWeek == DayOfWeek.Friday)
+                        {
+                            principalRemaining = principalRemaining - monthlyPayment;
+                        }
+                        if (principalRemaining < 0)
+                        {
+                            principalRemaining = 0m;
+                        }
+                        var minPayment = GetMinimumPayment(acc.PrincipalRemaining, TermInDays - i, annualInterestRate);
+
+                        return new Accumulator
+                        {
+                            Index = i,
+                            CaptialValue = acc.CaptialValue * dailyGrowth,
+                            InterestAccrued = interestAccrued,
+                            InterestCharged = interestCharged,
+                            TotalInterestCharged = acc.TotalInterestCharged + interestCharged,
+                            MinimumPayment = minPayment,
+                            PrincipalRemaining = principalRemaining
+                        };
+                    }
+                )
+                .Buffer(50.Milliseconds())
+                .SubscribeOn(_schedulerProvider.ThreadPool)
+                .ObserveOn(_schedulerProvider.Dispatcher)
+                .Subscribe(kvps =>
+                {
+                    Debug.WriteLine("Recieved {0} in batch", kvps.Count);
+                    foreach (var kvp in kvps)
+                    {
+                        CapitalValue.ResultOverTime[kvp.Index].Value = kvp.CaptialValue;
+                        TotalExpenses.ResultOverTime[kvp.Index].Value = kvp.TotalInterestCharged;
+                        MinimumPayment.ResultOverTime[kvp.Index].Value = kvp.MinimumPayment;
+                        PrincipalRemaining.ResultOverTime[kvp.Index].Value = kvp.PrincipalRemaining;
+                        Balance.ResultOverTime[kvp.Index].Value = kvp.CaptialValue - kvp.PrincipalRemaining;
+                    }
+                },
+                () => Debug.WriteLine("UpdateValues Completed."));
+        }
+
+        private sealed class Accumulator
+        {
+            public int Index { get; set; }
+            public decimal CaptialValue { get; set; }
+            public decimal PrincipalRemaining { get; set; }
+            public decimal MinimumPayment { get; set; }
+            public decimal InterestAccrued { get; set; }
+            public decimal InterestCharged { get; set; }
+            public decimal TotalInterestCharged { get; set; }
+        }
+
     }
 }
