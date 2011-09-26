@@ -78,12 +78,12 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Repository
 
         #region Implementation of IMortgageRepository
 
-        public decimal GetMinimumMonthlyPayment(decimal principal, double term, decimal rate)
+        public decimal GetMinimumMonthlyPayment(decimal principal, decimal term, decimal rate)
         {
             if (!IsLoaded.First())
                 throw new InvalidOperationException("Load is not complete");
 
-            byte t = term < 0.5 && term > 0
+            byte t = term < 0.5m && term > 0
                          ? (byte)1
                          : Convert.ToByte(term);
 

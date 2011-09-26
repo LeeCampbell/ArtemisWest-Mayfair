@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 using ArtemisWest.PropertyInvestment.Calculator.Entities;
 using Microsoft.Practices.Prism.ViewModel;
 
@@ -9,7 +8,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculatio
     {
         private readonly int _termInDays;
         private readonly PositionViewModel[] _resultOverTime;
-        private string _title;
+        
 
         public CalculationViewModel(int termInDays)
             : this(termInDays, DateTime.Today)
@@ -29,15 +28,21 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculatio
             }
         }
 
+        public void SetTitle(string newValue)
+        {
+            Title = newValue;
+        }
+
         public PositionViewModel[] ResultOverTime
         {
             get { return _resultOverTime; }
         }
 
+        private string _title;
         public string Title
         {
             get { return _title; }
-            set
+            private set
             {
                 if (_title != value)
                 {

@@ -6,6 +6,6 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Repository
     {
         IObservable<bool> IsLoaded { get;}
         void Load();
-        decimal GetMinimumMonthlyPayment(decimal principal, double term, decimal rate);
+        decimal GetMinimumMonthlyPayment(decimal principal, decimal term, decimal rate);
     }
 }

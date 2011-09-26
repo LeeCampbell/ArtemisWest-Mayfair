@@ -1,13 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Reactive;
 using System.Reactive.Linq;
 using ArtemisWest.Mayfair.Infrastructure;
 using ArtemisWest.PropertyInvestment.Calculator.Repository;
 using ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculation;
 using ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Input;
 using Microsoft.Practices.Prism.ViewModel;
+using Unit = System.Reactive.Unit;
 
 namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
 {
@@ -35,28 +35,9 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
             _mortgageRepository = mortgageRepository;
             _schedulerProvider = schedulerProvider;
 
-            var inputPropertyChanges =
-                    Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
-                        eh => eh.Invoke,
-                        eh => Input.PropertyChanged += eh,
-                        eh => Input.PropertyChanged -= eh);
+            BindInputTitleToCharts();
 
-            //inputPropertyChanges
-            //    .Where(e => e.EventArgs.PropertyName == "Title")
-            //    //.Subscribe(_ => RaisePropertyChanged("Title"));
-            //    .Subscribe(_ => Title = _input.Title);
-
-            var propertyChanges = inputPropertyChanges.Where(e => e.EventArgs.PropertyName != "Title");
-            var repoIsLoaded = _mortgageRepository.IsLoaded
-                .Where(isLoaded => isLoaded);
-
-            _inputChangeSubscription =
-                Observable.CombineLatest(
-                        repoIsLoaded,
-                        propertyChanges,
-                        (isLoaded, propertyChanged) => Unit.Default
-                    )
-                    .Subscribe(_ => Reevaluate());
+            _inputChangeSubscription = SubscribeToInputChanges();
 
             _mortgageRepository.Load();
         }
@@ -67,7 +48,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
             {
                 return 0m;
             }
-            double term = termInDays / 365.0;
+            decimal term = termInDays / 365.25m;
             var absoluteMin = _mortgageRepository.GetMinimumMonthlyPayment(principal, term, interestRate);
             return Math.Round(absoluteMin, 2, MidpointRounding.AwayFromZero);
         }
@@ -117,21 +98,6 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
             get { return _monthlyExpenses; }
         }
 
-        private string _title;
-        public string Title
-        {
-            get { return _title; }
-            set
-            {
-                if (value != _title)
-                {
-                    _title = value;
-                    RaisePropertyChanged(() => Title);
-                }
-
-            }
-        }
-
         #region Implementation of IDisposable
 
         public void Dispose()
@@ -141,6 +107,32 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
         }
 
         #endregion
+
+        private void BindInputTitleToCharts()
+        {
+            Input.WhenPropertyChanges(vm => vm.Title, newValue => Balance.SetTitle(newValue));
+            Balance.SetTitle(Input.Title);
+        }
+
+        private IDisposable SubscribeToInputChanges()
+        {
+            var inputPropertyChanges =
+                Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                    eh => eh.Invoke,
+                    eh => Input.PropertyChanged += eh,
+                    eh => Input.PropertyChanged -= eh);
+
+            var propertyChanges = inputPropertyChanges.Where(e => e.EventArgs.PropertyName != "Title");
+            var repoIsLoaded = _mortgageRepository.IsLoaded
+                .Where(isLoaded => isLoaded);
+
+            return Observable.CombineLatest(
+                    repoIsLoaded,
+                    propertyChanges,
+                    (isLoaded, propertyChanged) => Unit.Default
+                    )
+                    .Subscribe(_ => Reevaluate());
+        }
 
         private void Reevaluate()
         {
@@ -158,7 +150,8 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
             };
 
             var annualInterestRate = Input.LoanInterestRate;
-            var monthlyPayment = GetMinimumPayment(seed.PrincipalRemaining, TermInDays, annualInterestRate);
+            var weeklyMortgagePayment = GetMinimumPayment(seed.PrincipalRemaining, TermInDays, annualInterestRate);
+            var weeklyRentalIncome = Input.WeeklyRentalIncome;
 
             return Observable.Range(0, TermInDays)
                 .Scan(
@@ -167,10 +160,11 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                     {
                         DateTime date = DateTime.Today.AddDays(i);
                         var daysInYear = date.DaysInYear();
-                        var dailyGrowth = 1m + yearlyGrowth / daysInYear;
+                        var dailyGrowth = 1m + (yearlyGrowth / daysInYear);
                         var interestAccrued = acc.InterestAccrued + (annualInterestRate * acc.PrincipalRemaining) * (1M / daysInYear);
                         var interestCharged = 0m;
                         var principalRemaining = acc.PrincipalRemaining;
+                        var dailyIncome = 0m;
                         if (date.Day == 1)
                         {
                             interestCharged = interestAccrued;
@@ -179,7 +173,8 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                         }
                         if (date.DayOfWeek == DayOfWeek.Friday)
                         {
-                            principalRemaining = principalRemaining - monthlyPayment;
+                            principalRemaining = principalRemaining - weeklyMortgagePayment;
+                            dailyIncome = weeklyRentalIncome - weeklyMortgagePayment;
                         }
                         if (principalRemaining < 0)
                         {
@@ -191,11 +186,12 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                         {
                             Index = i,
                             CaptialValue = acc.CaptialValue * dailyGrowth,
+                            PrincipalRemaining = principalRemaining,
+                            TotalIncome = acc.TotalIncome + dailyIncome,
                             InterestAccrued = interestAccrued,
                             InterestCharged = interestCharged,
                             TotalInterestCharged = acc.TotalInterestCharged + interestCharged,
                             MinimumPayment = minPayment,
-                            PrincipalRemaining = principalRemaining
                         };
                     }
                 )
@@ -208,10 +204,11 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                     foreach (var kvp in kvps)
                     {
                         CapitalValue.ResultOverTime[kvp.Index].Value = kvp.CaptialValue;
-                        TotalExpenses.ResultOverTime[kvp.Index].Value = kvp.TotalInterestCharged;
+                        TotalExpenses.ResultOverTime[kvp.Index].Value = kvp.TotalInterestCharged;   //?May need to re-assess this.
                         MinimumPayment.ResultOverTime[kvp.Index].Value = kvp.MinimumPayment;
+                        TotalIncome.ResultOverTime[kvp.Index].Value = kvp.TotalIncome;              //?...Or this.
                         PrincipalRemaining.ResultOverTime[kvp.Index].Value = kvp.PrincipalRemaining;
-                        Balance.ResultOverTime[kvp.Index].Value = kvp.CaptialValue - kvp.PrincipalRemaining;
+                        Balance.ResultOverTime[kvp.Index].Value = kvp.CaptialValue - kvp.PrincipalRemaining + kvp.TotalIncome; //?... and this.
                     }
                 },
                 () => Debug.WriteLine("UpdateValues Completed."));
@@ -220,13 +217,13 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
         private sealed class Accumulator
         {
             public int Index { get; set; }
-            public decimal CaptialValue { get; set; }
-            public decimal PrincipalRemaining { get; set; }
+            public decimal CaptialValue { get; set; }       //Assets
+            public decimal PrincipalRemaining { get; set; } //Liabilities
             public decimal MinimumPayment { get; set; }
             public decimal InterestAccrued { get; set; }
             public decimal InterestCharged { get; set; }
             public decimal TotalInterestCharged { get; set; }
+            public decimal TotalIncome { get; set; }        //Cashflow, could be negative if expenses exceed income.
         }
-
     }
 }

@@ -44,10 +44,10 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Controls
             var newSeries = new LineSeries
                                 {
                                     DataContext = newViewModel,
-                                    Title = newViewModel.Title,
                                     DependentValuePath = "Value",
                                     IndependentValuePath = "Date"
                                 };
+            BindingOperations.SetBinding(newSeries, Series.TitleProperty, new Binding("Title"));
 
             var filter = new CollectionSizeFilter();
             BindingOperations.SetBinding(filter,

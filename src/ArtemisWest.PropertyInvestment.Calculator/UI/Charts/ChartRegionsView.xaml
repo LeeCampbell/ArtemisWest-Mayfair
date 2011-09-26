@@ -162,25 +162,5 @@
                         Title="Minimum Weekly payment (if re-financed)"
                         Style="{StaticResource ChartStyleWithoutLegend}"
                         prism:RegionManager.RegionName="{x:Static local:RegionNames.MinimumPaymentChartRegion}"/>
-
-        <!--<ContentControl x:Name="BalanceChartRegion"
-                            Grid.ColumnSpan="4"
-                            prism:RegionManager.RegionName="{x:Static local:RegionNames.BalanceChartRegion}"/>
-        <ContentControl x:Name="PrincipalRemainingChartRegion"
-                            Grid.Column="0"
-                            Grid.Row="1"
-                            prism:RegionManager.RegionName="{x:Static local:RegionNames.PrincipalRemainingChartRegion}"/>
-        <ContentControl x:Name="CapitalValueChartRegion"
-                            Grid.Column="1"
-                            Grid.Row="1"
-                            prism:RegionManager.RegionName="{x:Static local:RegionNames.CapitalValueChartRegion}"/>
-        <ContentControl x:Name="TotalExpensesChartRegion"
-                            Grid.Column="2"
-                            Grid.Row="1"
-                            prism:RegionManager.RegionName="{x:Static local:RegionNames.TotalExpensesChartRegion}"/>
-        <ContentControl x:Name="MinimumPaymentChartRegion"
-                            Grid.Column="3"
-                            Grid.Row="1"
-                            prism:RegionManager.RegionName="{x:Static local:RegionNames.MinimumPaymentChartRegion}"/>-->
     </Grid>
 </UserControl>

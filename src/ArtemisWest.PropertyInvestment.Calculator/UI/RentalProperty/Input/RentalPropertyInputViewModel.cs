@@ -60,6 +60,20 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Input
             }
         }
 
+        private decimal _weeklyRentalIncome;
+        public decimal WeeklyRentalIncome
+        {
+            get { return _weeklyRentalIncome; }
+            set
+            {
+                if (_weeklyRentalIncome != value)
+                {
+                    _weeklyRentalIncome = value;
+                    RaisePropertyChanged(() => WeeklyRentalIncome);
+                }
+            }
+        }
+
         private string _title;
         public string Title
         {
@@ -74,5 +88,6 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Input
             }
         }
         //TODO: Add loan term. Changes to this would obviously need to correct the length of the Balances collections. There4 they could not be arrays anymore.
+
     }
 }

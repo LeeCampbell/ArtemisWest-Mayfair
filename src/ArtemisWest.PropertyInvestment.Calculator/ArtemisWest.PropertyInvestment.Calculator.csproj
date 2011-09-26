@@ -91,8 +91,10 @@
     <Compile Include="Controls\ChartRegionAdapter.cs" />
     <Compile Include="Controls\ChartSeriesSyncBehavior.cs" />
     <Compile Include="Controls\CollectionSizeFilter.cs" />
+    <Compile Include="Controls\CurrencyConverter.cs" />
     <Compile Include="Controls\DivisionConverter.cs" />
     <Compile Include="Controls\PercentageConverter.cs" />
+    <Compile Include="Controls\RangeInput.cs" />
     <Compile Include="Entities\DateTransactionList.cs" />
     <Compile Include="Entities\Position.cs" />
     <Compile Include="Entities\PositionViewModel.cs" />
@@ -110,6 +112,10 @@
     <Compile Include="UI\RentalProperty\Calculation\CalculationViewModel.cs" />
     <Compile Include="UI\RentalProperty\RentalPropertyController.cs" />
     <Compile Include="UI\RentalProperty\RentalPropertyViewModel.cs" />
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UI\Charts\ChartRegionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
