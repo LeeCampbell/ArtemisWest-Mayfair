@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace ArtemisWest.PropertyInvestment.Calculator.Controls
 {
-    //TODO: Implement correctly.
+    //TODO: Use ArtemisWest.Presentation.Controls.CurrencyConverter
     public sealed class CurrencyConverter : IValueConverter
     {
         #region Implementation of IValueConverter

@@ -105,10 +105,11 @@
     <Compile Include="Repository\DailyCompoundedMortgageRepository.cs" />
     <Compile Include="Repository\Entities\Row.cs" />
     <Compile Include="Timer.cs" />
-    <Compile Include="UI\Charts\ChartRegionsView.xaml.cs">
-      <DependentUpon>ChartRegionsView.xaml</DependentUpon>
+    <Compile Include="UI\Charts\ChartRegions.xaml.cs">
+      <DependentUpon>ChartRegions.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Charts\ChartsPresenter.cs" />
+    <Compile Include="UI\Charts\IChartPresenter.cs" />
     <Compile Include="UI\RentalProperty\Calculation\CalculationViewModel.cs" />
     <Compile Include="UI\RentalProperty\RentalPropertyController.cs" />
     <Compile Include="UI\RentalProperty\RentalPropertyViewModel.cs" />
@@ -116,7 +117,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\Charts\ChartRegionsView.xaml">
+    <Page Include="UI\Charts\ChartRegions.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

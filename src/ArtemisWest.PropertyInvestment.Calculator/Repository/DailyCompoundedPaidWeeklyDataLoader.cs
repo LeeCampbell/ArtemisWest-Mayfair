@@ -12,12 +12,11 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Repository
     sealed class DailyCompoundedPaidWeeklyDataLoader
     {
         private readonly IObservable<Row> _minimumPayments;
-        //private readonly ReadOnlyCollection<Row> _data;
 
         //TODO: Split the files into Interest rate splits, not term. Ie load 0-8% as fast as possible (most standard rates)
-        //TODO:Schedule the loading of the data onto another thread.
-        //  in the ctor create the List<Row> and then AddRange as the rows come in. Will need to come in ordered. -Or perhaps just OnNext the lot -
-        //  OnNext the New Min-Max Interest Rates
+        //TODO: in the ctor create the List<Row> and then AddRange as the rows come in. Will need to come in ordered. 
+        //      -Or perhaps just OnNext the lot -
+        //      OnNext the New Min-Max Interest Rates
 
 
         public DailyCompoundedPaidWeeklyDataLoader()

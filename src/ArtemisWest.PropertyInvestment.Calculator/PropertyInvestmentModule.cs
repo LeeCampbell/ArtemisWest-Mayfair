@@ -1,6 +1,5 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls.DataVisualization.Charting;
+﻿using System.Windows.Controls.DataVisualization.Charting;
+using ArtemisWest.Mayfair.Infrastructure;
 using ArtemisWest.PropertyInvestment.Calculator.Controls;
 using ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty;
 using ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Input;
@@ -11,7 +10,7 @@ using Microsoft.Practices.Unity;
 
 namespace ArtemisWest.PropertyInvestment.Calculator
 {
-    public class PropertyInvestmentModule : IModule
+    public sealed class PropertyInvestmentModule : IModule
     {
         private readonly IUnityContainer _container;
 
@@ -31,7 +30,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator
             _container.RegisterType<IRentalPropertyInputPresenter, RentalPropertyInputPresenter>();
             _container.RegisterType<Repository.IDailyCompoundedMortgageRepository, Repository.DailyCompoundedMortgageRepository>(singleton);
 
-            LoadViews();
+            this.LoadViews();
 
             var chartsPresenter = _container.Resolve<UI.Charts.ChartsPresenter>();
             chartsPresenter.Show();
@@ -49,26 +48,6 @@ namespace ArtemisWest.PropertyInvestment.Calculator
         {
             var instance = ServiceLocator.Current.GetInstance<RegionAdapterMappings>();
             instance.RegisterMapping(typeof(Chart), ServiceLocator.Current.GetInstance<ChartRegionAdapter>());
-        }
-
-        //TODO: Makes this a method in Infrasturcture.
-        private void LoadViews()
-        {
-            //TODO: Make this a scan loop that finds *View.xaml files and loads them
-            //LoadView(@"UI\Charts\ChartsView.xaml");
-            LoadView(@"UI\RentalProperty\Input\RentalPropertyInputView.xaml");
-            LoadView(@"UI\RentalProperty\Calculation\CalculationView.xaml");
-        }
-
-        private void LoadView(string viewPath)
-        {
-            var packPath = string.Format(@"pack://application:,,,/{0};component/{1}", GetType().Assembly.GetName().Name,
-                                         viewPath);
-            var view = new Uri(packPath, UriKind.RelativeOrAbsolute);
-            var skinResource = new ResourceDictionary {Source = view};
-
-            var appMergedResourceDictionaries = Application.Current.Resources.MergedDictionaries;
-            appMergedResourceDictionaries.Add(skinResource);
         }
     }
 }

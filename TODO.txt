@@ -1,19 +1,16 @@
 I want to be able to have 
+ x  CaptialValue, 
+ x  RemainingDebt, 
+ x  NetPosition
    Weekly Income, 
-   CaptialValue, 
-   RemainingDebt, 
-   NetPosition
-   
- charts all working asap
  
+Create concept of schedules
+	eg Rental Income can be Weekly/Monthly 
+		set date 1st or last of month, Monday or Friday
+	Can be a composite of many schedules
+		eg $500/wk till 2015 then $550 per week
+	Composites can be manual/static (as Above) or Calculated/Dynamic (eg $500/wk increase @5%/yr)
  
- NuGet
-  Prism
-  Rx
-  nUnit
-  Moq
-  Rxx?
-  
 Have a local teamcity that builds. Version 1.0.{SVNRevision}
   AW.Core
   AW.Presentation - Take the PercentageConverter into the AW.Pres

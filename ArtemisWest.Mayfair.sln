@@ -11,6 +11,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{731F2163
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArtemisWest.PropertyInvestment.Calculator.Tests", "test\ArtemisWest.PropertyInvestment.Calculator.Tests\ArtemisWest.PropertyInvestment.Calculator.Tests.csproj", "{D8084B4C-05B2-4FFD-BB2F-34A774143CBA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{4734AF66-DD9C-4526-9799-1821656EFA3D}"
+	ProjectSection(SolutionItems) = preProject
+		Readme.txt = Readme.txt
+		TODO.txt = TODO.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

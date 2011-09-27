@@ -2,7 +2,7 @@ ArtemisWest's Mayfair project.
 
 Mayfair is a graphical investment calculator application aim to help people understand how the composition of simple transactions for an investments can manifest themselves.
 
-A key gaol of Mayfair is to help Property Investors choose between investments given market information such as 
+A key goal of Mayfair is to help Property Investors choose between investments given market information such as 
  *Interest rates
  *Market value
  *Expected rental income

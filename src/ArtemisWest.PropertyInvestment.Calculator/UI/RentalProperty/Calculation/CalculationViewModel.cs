@@ -8,7 +8,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculatio
     {
         private readonly int _termInDays;
         private readonly PositionViewModel[] _resultOverTime;
-        
+        private string _title;
 
         public CalculationViewModel(int termInDays)
             : this(termInDays, DateTime.Today)
@@ -28,17 +28,11 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculatio
             }
         }
 
-        public void SetTitle(string newValue)
-        {
-            Title = newValue;
-        }
-
         public PositionViewModel[] ResultOverTime
         {
             get { return _resultOverTime; }
         }
 
-        private string _title;
         public string Title
         {
             get { return _title; }
@@ -52,19 +46,10 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculatio
             }
         }
 
-        //TODO: This will belong on the RegionAdapter for the Chart (that will be an ItemsControl/ISeriesHost that is loaded with LineSeries)
-        private bool _isLegendVisible;
-        public bool IsLegendVisible
+        //As a method to stop people using two way binding. This should only be set by the parent.
+        public void SetTitle(string newValue)
         {
-            get { return _isLegendVisible; }
-            set
-            {
-                if (_isLegendVisible != value)
-                {
-                    _isLegendVisible = value;
-                    RaisePropertyChanged(() => IsLegendVisible);
-                }
-            }
+            Title = newValue;
         }
     }
 }

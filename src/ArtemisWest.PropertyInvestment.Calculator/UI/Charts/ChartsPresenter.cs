@@ -2,29 +2,24 @@
 
 namespace ArtemisWest.PropertyInvestment.Calculator.UI.Charts
 {
-    public class ChartsPresenter : IChartPresenter
+    public sealed class ChartsPresenter : IChartPresenter
     {
         private readonly IRegionManager _regionManager;
-        private readonly ChartRegionsView _chartRegionsView;
+        private readonly ChartRegions _chartRegions;
 
-        public ChartsPresenter(IRegionManager regionManager, ChartRegionsView chartRegionsView)
+        public ChartsPresenter(IRegionManager regionManager, ChartRegions chartRegions)
         {
             _regionManager = regionManager;
-            _chartRegionsView = chartRegionsView;
+            _chartRegions = chartRegions;
         }
 
         #region Implementation of IChartPresenter
 
         public void Show()
         {
-            _regionManager.AddToRegion(RegionNames.MainChartRegion, _chartRegionsView);
+            _regionManager.AddToRegion(RegionNames.MainChartRegion, _chartRegions);
         }
 
         #endregion
-    }
-
-    public interface IChartPresenter
-    {
-        void Show();
     }
 }
