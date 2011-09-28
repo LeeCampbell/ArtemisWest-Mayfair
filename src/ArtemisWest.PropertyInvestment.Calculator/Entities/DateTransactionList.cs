@@ -52,7 +52,10 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Entities
             get { return _transactions; }
         }
 
-        //TODO: Closing value? If so should realy cache value. If we do that then also consider why we dont construct the transactions internally instad of having it passed in.
+        /// <summary>
+        /// The Current Balance for the Transactions of the date
+        /// </summary>
+        /// <returns>Return the Sum of the transactions of the day, plus the initial value.</returns>
         public decimal CurrentBalance()
         {
             return InitialValue + Transactions.Sum(t => t.Amount);

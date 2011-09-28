@@ -2,8 +2,11 @@
 
 namespace ArtemisWest.PropertyInvestment.Calculator.Repository.Entities
 {
+    [System.Diagnostics.DebuggerDisplay("Term={Term}; Principal={Principal}; Rate={Rate}; MinimumPayment={MinimumPayment}")]
     sealed class Row
     {
+        public static readonly string CsvHeader = "Term,Principal,Rate,MinimumPayment";
+
         private readonly byte _term;
         private readonly decimal _principal;
         private readonly decimal _rate;
@@ -53,6 +56,11 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Repository.Entities
         public decimal MinimumPayment
         {
             get { return _minimumPayment; }
+        }
+
+        public string ToCsv()
+        {
+            return string.Format("{0},{1},{2},{3}", Term, Principal, Rate, MinimumPayment);
         }
     }
 }

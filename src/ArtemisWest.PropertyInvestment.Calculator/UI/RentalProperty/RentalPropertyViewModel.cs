@@ -8,6 +8,7 @@ using ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculation;
 using ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Input;
 using Microsoft.Practices.Prism.ViewModel;
 using Unit = System.Reactive.Unit;
+using System.Reactive.Disposables;
 
 namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
 {
@@ -123,15 +124,12 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                     eh => Input.PropertyChanged -= eh);
 
             var propertyChanges = inputPropertyChanges.Where(e => e.EventArgs.PropertyName != "Title");
-            var repoIsLoaded = _mortgageRepository.IsLoaded
-                .Where(isLoaded => isLoaded);
-
-            return Observable.CombineLatest(
-                    repoIsLoaded,
-                    propertyChanges,
-                    (isLoaded, propertyChanged) => Unit.Default
-                    )
-                    .Subscribe(_ => Reevaluate());
+            
+            return propertyChanges
+                .CombineLatest(_mortgageRepository.MinimumRate, IgnoreValues)
+                .CombineLatest(_mortgageRepository.MaximumRate, IgnoreValues)
+                .CombineLatest(_mortgageRepository.IsLoaded, IgnoreValues)
+                .Subscribe(_ => Reevaluate());
         }
 
         private void Reevaluate()
@@ -142,6 +140,28 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
 
         private IDisposable UpdateValues()
         {
+            Debug.WriteLine("  UpdateValues()");
+            //TODO: Set IsDirty = true on all charts
+            CapitalValue.IsDirty =
+                TotalExpenses.IsDirty =
+                MinimumPayment.IsDirty =
+                TotalIncome.IsDirty =
+                PrincipalRemaining.IsDirty =
+                Balance.IsDirty = true;
+
+            //Check if the Rate is within the Loaded range
+            var annualInterestRate = Input.LoanInterestRate;
+            if (annualInterestRate < _mortgageRepository.MinimumRate.First()
+                || annualInterestRate > _mortgageRepository.MaximumRate.First())
+            {
+                Debug.WriteLine("    --Short circuit. {0} {1} {2} ",
+                    _mortgageRepository.MinimumRate.First(),
+                    annualInterestRate,
+                    _mortgageRepository.MaximumRate.First());
+
+                return Disposable.Empty;
+            }
+
             var yearlyGrowth = Input.CaptialGrowth;
             var seed = new Accumulator
             {
@@ -149,7 +169,6 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                 PrincipalRemaining = Input.InitialLoanAmount
             };
 
-            var annualInterestRate = Input.LoanInterestRate;
             var weeklyMortgagePayment = GetMinimumPayment(seed.PrincipalRemaining, TermInDays, annualInterestRate);
             var weeklyRentalIncome = Input.WeeklyRentalIncome;
 
@@ -212,6 +231,11 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                     }
                 },
                 () => Debug.WriteLine("UpdateValues Completed."));
+        }
+
+        private static Unit IgnoreValues<T1, T2>(T1 a, T2 b)
+        {
+            return Unit.Default;
         }
 
         private sealed class Accumulator

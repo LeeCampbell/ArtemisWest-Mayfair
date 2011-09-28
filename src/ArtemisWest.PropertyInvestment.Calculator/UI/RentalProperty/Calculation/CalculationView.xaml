@@ -25,27 +25,5 @@
                 <Binding Source="{StaticResource FilteredBalances}"/>
             </chartingToolkit:LineSeries.ItemsSource>
         </chartingToolkit:LineSeries>
-
-
-            <!--TODO: Create a ChartRegion Adapter or custom ItemsControl So I can drop multiple Charts on the same space for comparisons.
-            <chartingToolkit:LineSeries Title="{Binding Title}"
-                                        DependentValuePath="Value"
-                                        IndependentValuePath="Date">
-                <chartingToolkit:LineSeries.Resources>
-                    <Controls:CollectionSizeFilter x:Key="FilteredBalances" 
-                                                   Source="{Binding ResultOverTime}" 
-                                                   MaxItemCount="{Binding 
-                                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type chartingToolkit:Chart}}, 
-                                                        Path=ActualWidth, 
-                                                        Converter={StaticResource DivisionConverter}, 
-                                                        ConverterParameter=25}"/>
-                </chartingToolkit:LineSeries.Resources>
-
-                <chartingToolkit:LineSeries.ItemsSource >
-                    <Binding Source="{StaticResource FilteredBalances}"/>
-                </chartingToolkit:LineSeries.ItemsSource>
-            </chartingToolkit:LineSeries>
-
-        </chartingToolkit:Chart>-->
     </DataTemplate>
 </ResourceDictionary>

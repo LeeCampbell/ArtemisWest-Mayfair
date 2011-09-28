@@ -29,7 +29,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Controls
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 int newStartingIndex = e.NewStartingIndex;
-                //HACK:
+
                 foreach (CalculationViewModel newViewModel in e.NewItems)
                 {
                     var newSeries = CreateLineSeries(newViewModel);

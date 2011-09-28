@@ -9,6 +9,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculatio
         private readonly int _termInDays;
         private readonly PositionViewModel[] _resultOverTime;
         private string _title;
+        private bool _isDirty;
 
         public CalculationViewModel(int termInDays)
             : this(termInDays, DateTime.Today)
@@ -50,6 +51,19 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculatio
         public void SetTitle(string newValue)
         {
             Title = newValue;
+        }
+
+        public bool IsDirty
+        {
+            get { return _isDirty; }
+            set
+            {
+                if (_isDirty != value)
+                {
+                    _isDirty = value;
+                    RaisePropertyChanged(() => IsDirty);
+                }
+            }
         }
     }
 }

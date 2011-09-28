@@ -18,19 +18,37 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Repository
 
         //Term --> Rate --> Principal
         private static readonly Dictionary<byte, Dictionary<decimal, Dictionary<decimal, decimal>>> _dataGroupsDictionary = new Dictionary<byte, Dictionary<decimal, Dictionary<decimal, decimal>>>();
-        private static decimal _minimumPrincipal;
-        private static decimal _maximumPrincipal;
+        private const decimal MinimumPrincipal = 1000000;
+        private const decimal MaximumPrincipal = 9950000;
+
+        private static decimal _minimumRate;
+        private static decimal _maximumRate;
+
         private static int _isLoading;
         private static readonly BehaviorSubject<bool> _isLoaded = new BehaviorSubject<bool>(false);
+        private static readonly BehaviorSubject<decimal> _minimumRateSubject = new BehaviorSubject<decimal>(0m);
+        private static readonly BehaviorSubject<decimal> _maximumRateSubject = new BehaviorSubject<decimal>(0m);
 
         public DailyCompoundedMortgageRepository(ISchedulerProvider schedulerProvider)
         {
             _schedulerProvider = schedulerProvider;
         }
 
+        #region Implementation of IMortgageRepository
+
         public IObservable<bool> IsLoaded
         {
             get { return _isLoaded.AsObservable(); }
+        }
+
+        public IObservable<decimal> MinimumRate
+        {
+            get { return _minimumRateSubject.AsObservable(); }
+        }
+
+        public IObservable<decimal> MaximumRate
+        {
+            get { return _maximumRateSubject.AsObservable(); }
         }
 
         public void Load()
@@ -47,41 +65,18 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Repository
                     {
                         var dailyCompoundedPaidWeekly = new DailyCompoundedPaidWeeklyDataLoader();
                         dailyCompoundedPaidWeekly.MinimumPayments
-                            .Subscribe(LoadDataRow,DataLoadCompleted);
+                            .Subscribe(LoadDataSet, DataLoadCompleted);
                     }
                 });
         }
 
-        private static void DataLoadCompleted()
-        {
-            var term0Rates = _dataGroupsDictionary.First().Value;
-            var rate0Principals = term0Rates.First().Value;
-
-            _minimumPrincipal = rate0Principals.Keys.Min();
-            _maximumPrincipal = rate0Principals.Keys.Max();
-            _isLoaded.OnNext(true);
-            Debug.WriteLine("DailyCompoundedMortgageRepository is now Loaded");
-        }
-
-        private static void LoadDataRow(Row row)
-        {
-            if (!_dataGroupsDictionary.ContainsKey(row.Term))
-            {
-                _dataGroupsDictionary[row.Term] = new Dictionary<decimal, Dictionary<decimal, decimal>>();
-            }
-            if (!_dataGroupsDictionary[row.Term].ContainsKey(row.Rate))
-            {
-                _dataGroupsDictionary[row.Term][row.Rate] = new Dictionary<decimal, decimal>();
-            }
-            _dataGroupsDictionary[row.Term][row.Rate][row.Principal] = row.MinimumPayment;
-        }
-
-        #region Implementation of IMortgageRepository
-
         public decimal GetMinimumMonthlyPayment(decimal principal, decimal term, decimal rate)
         {
-            if (!IsLoaded.First())
-                throw new InvalidOperationException("Load is not complete");
+            if (rate < _minimumRate || rate > _maximumRate)
+            {
+                var message = string.Format("Rate is outside of the supported range of {0} to {1}", _minimumRate, _maximumRate);
+                throw new ArgumentOutOfRangeException("rate", message);
+            }
 
             byte t = term < 0.5m && term > 0
                          ? (byte)1
@@ -89,7 +84,46 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Repository
 
             return MinPayment(t, principal, rate);
         }
+
         #endregion
+
+        private static void DataLoadCompleted()
+        {
+            _isLoaded.OnNext(true);
+            Debug.WriteLine("DailyCompoundedMortgageRepository is now Loaded");
+        }
+
+        private static void LoadDataSet(IEnumerable<Row> rowSet1)
+        {
+            var rowSet = rowSet1.ToList();
+            var minimumRate = _minimumRate;
+            var maximumRate = _maximumRate;
+            foreach (var row in rowSet)
+            {
+                if (!_dataGroupsDictionary.ContainsKey(row.Term))
+                {
+                    _dataGroupsDictionary[row.Term] = new Dictionary<decimal, Dictionary<decimal, decimal>>();
+                }
+                if (!_dataGroupsDictionary[row.Term].ContainsKey(row.Rate))
+                {
+                    _dataGroupsDictionary[row.Term][row.Rate] = new Dictionary<decimal, decimal>();
+                }
+                _dataGroupsDictionary[row.Term][row.Rate][row.Principal] = row.MinimumPayment;
+                if (row.Rate < minimumRate) minimumRate = row.Rate;
+                if (row.Rate > maximumRate) maximumRate = row.Rate;
+            }
+
+            if (minimumRate < _minimumRate)
+            {
+                _minimumRate = minimumRate;
+                _minimumRateSubject.OnNext(_minimumRate);
+            }
+            if (maximumRate > _maximumRate)
+            {
+                _maximumRate = maximumRate;
+                _maximumRateSubject.OnNext(_maximumRate);
+            }
+        }
 
         private static decimal MinPayment(byte term, decimal principal, decimal rate)
         {
@@ -100,12 +134,12 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Repository
 
             var principalMultiplier = 1.0m;
             var normailizedPrincipal = RoundUp(principal, PrincipalStep);
-            while (normailizedPrincipal < _minimumPrincipal)
+            while (normailizedPrincipal < MinimumPrincipal)
             {
                 normailizedPrincipal = normailizedPrincipal * 10.0m;
                 principalMultiplier = principalMultiplier * 10.0m;
             }
-            while (normailizedPrincipal > _maximumPrincipal)
+            while (normailizedPrincipal > MaximumPrincipal)
             {
                 normailizedPrincipal = normailizedPrincipal / 10.0m;
                 principalMultiplier = principalMultiplier / 10.0m;

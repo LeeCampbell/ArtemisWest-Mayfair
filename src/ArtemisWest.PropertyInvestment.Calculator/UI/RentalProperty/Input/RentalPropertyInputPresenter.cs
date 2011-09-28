@@ -1,5 +1,4 @@
-﻿using ArtemisWest.Mayfair.Infrastructure;
-using Microsoft.Practices.Prism.Regions;
+﻿using Microsoft.Practices.Prism.Regions;
 
 namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Input
 {
@@ -11,12 +10,6 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Input
         public RentalPropertyInputPresenter(IRegionManager regionManager)
         {
             _regionManager = regionManager;
-
-            //TODO: Get from some local cache, like a cookie. ie whatever they typed last.
-
-            _viewModel.InitialCapitalValue = 440000m;
-            _viewModel.InitialLoanAmount = 413000m;
-            _viewModel.LoanInterestRate = 0.065m;
         }
 
         public RentalPropertyInputViewModel ViewModel
