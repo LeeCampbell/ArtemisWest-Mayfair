@@ -5,53 +5,38 @@
         <DataTemplate.Resources>
             <Controls:PercentageConverter x:Key="percentageConverter"/>
             <Controls:CurrencyConverter x:Key="currencyConverter"/>
-            
-            <Style TargetType="TextBox" x:Key="TitleTextBoxStyle">
-                <Setter Property="Width" Value="Auto"/>
-                <Setter Property="DockPanel.Dock" Value="Right"/>
-                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                <Setter Property="TextAlignment" Value="Left"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="BorderBrush" Value="Transparent"/>
-                <Style.Triggers>
-                    <Trigger Property="IsFocused" Value="True">
-                        <Setter Property="BorderBrush" Value="Black"/>
-                    </Trigger>
-                    <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="BorderBrush" Value="Black"/>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
         </DataTemplate.Resources>
-        <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" Margin="1,1,1,2" Padding="2">
-            <StackPanel>
-                <TextBox Text="{Binding Title}" Style="{StaticResource TitleTextBoxStyle}" />
 
-                <Controls:RangeInput Title="Captial Value"
+        <StackPanel>
+            <TextBox Text="{Binding Title}" 
+                     DockPanel.Dock="Right"
+                     Style="{StaticResource HeaderTextBoxStyle}" />
+
+            <Controls:RangeInput Title="Captial Value"
                                      Value="{Binding InitialCapitalValue, Mode=TwoWay}" ValueToTextConverter="{StaticResource currencyConverter}"
                                      MinimumValue="0" MaximumValue="1000000"
                                      AutoIncrementAmount="5000" MinimumIncrement="100"/>
 
-                <Controls:RangeInput Title="Loan amount"
+            <Controls:RangeInput Title="Loan amount"
                                      Value="{Binding InitialLoanAmount, Mode=TwoWay}"  ValueToTextConverter="{StaticResource currencyConverter}"
                                      MinimumValue="0" MaximumValue="1000000"
                                      AutoIncrementAmount="5000" MinimumIncrement="100"/>
 
-                <Controls:RangeInput Title="Interest Rate"
+            <Controls:RangeInput Title="Interest Rate"
                                      Value="{Binding LoanInterestRate, Mode=TwoWay}" ValueToTextConverter="{StaticResource percentageConverter}"
                                      MinimumValue="0" MaximumValue="0.25"
                                      AutoIncrementAmount="0.01" MinimumIncrement="0.0005"/>
 
-                <Controls:RangeInput Title="Capital Growth"
+            <Controls:RangeInput Title="Capital Growth"
                                      Value="{Binding CaptialGrowth, Mode=TwoWay}" ValueToTextConverter="{StaticResource percentageConverter}"
                                      MinimumValue="0" MaximumValue="0.1"
                                      AutoIncrementAmount="0.01" MinimumIncrement="0.0005"/>
 
-                <Controls:RangeInput Title="Weekly Rental Income"
+            <Controls:RangeInput Title="Weekly Rental Income"
                                      Value="{Binding WeeklyRentalIncome, Mode=TwoWay}" ValueToTextConverter="{StaticResource currencyConverter}"
                                      MinimumValue="0" MaximumValue="2000"
                                      AutoIncrementAmount="10" MinimumIncrement="1"/>
-            </StackPanel>
-        </Border>
+        </StackPanel>
+
     </DataTemplate>
 </ResourceDictionary>

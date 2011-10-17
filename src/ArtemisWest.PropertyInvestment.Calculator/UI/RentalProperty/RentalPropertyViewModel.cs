@@ -141,24 +141,13 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
         private IDisposable UpdateValues()
         {
             Debug.WriteLine("  UpdateValues()");
-            //TODO: Set IsDirty = true on all charts
-            CapitalValue.IsDirty =
-                TotalExpenses.IsDirty =
-                MinimumPayment.IsDirty =
-                TotalIncome.IsDirty =
-                PrincipalRemaining.IsDirty =
-                Balance.IsDirty = true;
+            
+            SetChartsAsDirty();
 
             //Check if the Rate is within the Loaded range
             var annualInterestRate = Input.LoanInterestRate;
-            if (annualInterestRate < _mortgageRepository.MinimumRate.First()
-                || annualInterestRate > _mortgageRepository.MaximumRate.First())
+            if (!IsRateValid(annualInterestRate))
             {
-                Debug.WriteLine("    --Short circuit. {0} {1} {2} ",
-                    _mortgageRepository.MinimumRate.First(),
-                    annualInterestRate,
-                    _mortgageRepository.MaximumRate.First());
-
                 return Disposable.Empty;
             }
 
@@ -177,6 +166,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                     seed,
                     (acc, i) =>
                     {
+                        //TODO: put in some logging to find out why the tails de-values?
                         DateTime date = DateTime.Today.AddDays(i);
                         var daysInYear = date.DaysInYear();
                         var dailyGrowth = 1m + (yearlyGrowth / daysInYear);
@@ -195,11 +185,17 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                             principalRemaining = principalRemaining - weeklyMortgagePayment;
                             dailyIncome = weeklyRentalIncome - weeklyMortgagePayment;
                         }
+                        decimal minPayment;
                         if (principalRemaining < 0)
                         {
                             principalRemaining = 0m;
+                            minPayment = 0m;
+                            //TODO: Start logging  = true
                         }
-                        var minPayment = GetMinimumPayment(acc.PrincipalRemaining, TermInDays - i, annualInterestRate);
+                        else
+                        {
+                            minPayment = GetMinimumPayment(acc.PrincipalRemaining, TermInDays - i, annualInterestRate);
+                        }
 
                         return new Accumulator
                         {
@@ -214,7 +210,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                         };
                     }
                 )
-                .Buffer(50.Milliseconds())
+                .Buffer(50.Milliseconds(), 1000, _schedulerProvider.ThreadPool) //Every 50ms or every 1000 events, which ever is more often.
                 .SubscribeOn(_schedulerProvider.ThreadPool)
                 .ObserveOn(_schedulerProvider.Dispatcher)
                 .Subscribe(kvps =>
@@ -231,6 +227,29 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                     }
                 },
                 () => Debug.WriteLine("UpdateValues Completed."));
+        }
+
+        private bool IsRateValid(decimal annualInterestRate)
+        {
+            var minimumRate = _mortgageRepository.MinimumRate.First();
+            var maximumRate = _mortgageRepository.MaximumRate.First();
+
+            if (annualInterestRate < minimumRate ||  maximumRate < annualInterestRate)
+            {
+                Debug.WriteLine("    --Short circuit. {0} {1} {2} ", minimumRate, annualInterestRate, maximumRate);
+                return false;
+            }
+            return true;
+        }
+
+        private void SetChartsAsDirty()
+        {
+            CapitalValue.IsDirty =
+                TotalExpenses.IsDirty =
+                MinimumPayment.IsDirty =
+                TotalIncome.IsDirty =
+                PrincipalRemaining.IsDirty =
+                Balance.IsDirty = true;
         }
 
         private static Unit IgnoreValues<T1, T2>(T1 a, T2 b)

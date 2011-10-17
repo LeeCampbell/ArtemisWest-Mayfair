@@ -24,6 +24,20 @@
             <chartingToolkit:LineSeries.ItemsSource >
                 <Binding Source="{StaticResource FilteredBalances}"/>
             </chartingToolkit:LineSeries.ItemsSource>
+            <chartingToolkit:LineSeries.DependentRangeAxis>
+                <chartingToolkit:LinearAxis
+                    Orientation="Y"
+                    Minimum="-10.5"
+                    Maximum="-0.5"
+                    Interval="1"
+                    ShowGridLines="True">
+                    <chartingToolkit:LinearAxis.AxisLabelStyle>
+                        <Style TargetType="chartingToolkit:AxisLabel">
+                            <Setter Property="StringFormat" Value="{}{0:c0}"/>
+                        </Style>
+                    </chartingToolkit:LinearAxis.AxisLabelStyle>
+                </chartingToolkit:LinearAxis>
+            </chartingToolkit:LineSeries.DependentRangeAxis>
         </chartingToolkit:LineSeries>
     </DataTemplate>
 </ResourceDictionary>

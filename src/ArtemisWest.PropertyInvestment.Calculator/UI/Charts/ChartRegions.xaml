@@ -3,20 +3,51 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              xmlns:prism="clr-namespace:Microsoft.Practices.Prism.Regions;assembly=Microsoft.Practices.Prism" 
              xmlns:local="clr-namespace:ArtemisWest.PropertyInvestment.Calculator" 
-             xmlns:Charting="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" xmlns:chartingprimitives="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=System.Windows.Controls.DataVisualization.Toolkit" xmlns:DataVisualization="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit">
+             xmlns:Charting="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" 
+             xmlns:chartingprimitives="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=System.Windows.Controls.DataVisualization.Toolkit" 
+             xmlns:DataVisualization="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit">
     <Control.Resources>
+        <Style TargetType="Charting:LinearAxis" x:Key="YAxisStyle">
+            <Setter Property="Orientation" Value="Y"/>
+            <Setter Property="ShowGridLines" Value="True"/>
+            <Setter Property="AxisLabelStyle">
+                <Setter.Value>
+                    <Style TargetType="Charting:NumericAxisLabel">
+                        <Setter Property="StringFormat" Value="{}{0:c0}"/>
+                        <Setter Property="FontFamily" Value="Segoe UI"/>
+                        <Setter Property="FontSize" Value="11"/>
+                        <Setter Property="Height" Value="20"/>
+                        <Setter Property="Foreground" Value="{StaticResource ForegroundEmphasis}"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="Charting:DateTimeAxis" x:Key="XAxisStyle">
+            <Setter Property="Orientation" Value="X"/>
+            <Setter Property="ShowGridLines" Value="True"/>
+            <Setter Property="AxisLabelStyle">
+                <Setter.Value>
+                    <Style TargetType="Charting:DateTimeAxisLabel">
+                        <Setter Property="StringFormat" Value="{}{0:yyyy}"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
         <Style TargetType="Charting:Chart" x:Key="BaseChartStyle">
-            <Setter Property="BorderBrush" Value="Black" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="0" />
             <Setter Property="IsTabStop" Value="False" />
-            <Setter Property="Padding" Value="10" />
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="Margin" Value="0,0,5,5" />
+            <Setter Property="Background" Value="{StaticResource PrimaryBackground}" />
             <Setter Property="SnapsToDevicePixels" Value="True" />
             <Setter Property="TitleStyle">
                 <Setter.Value>
                     <Style TargetType="DataVisualization:Title">
-                        <Setter Property="FontSize" Value="16" />
-                        <Setter Property="HorizontalAlignment" Value="Center" />
-                        <Setter Property="Margin" Value="0,10,0,10" />
+                        <Setter Property="FontSize" Value="11" />
+                        <Setter Property="HorizontalAlignment" Value="Left" />
+                        <Setter Property="Margin" Value="30,5,0,5" />
                     </Style>
                 </Setter.Value>
             </Setter>
@@ -24,16 +55,8 @@
                 <Setter.Value>
                     <Style TargetType="DataVisualization:Legend">
                         <Setter Property="Margin" Value="15,0,15,0" />
-                        <Setter Property="VerticalAlignment" Value="Center" />
-                        <Setter Property="BorderBrush" Value="#FFDBDBDB" />
-                        <Setter Property="Background">
-                            <Setter.Value>
-                                <LinearGradientBrush EndPoint="0.442,0.005" StartPoint="0.558,0.995">
-                                    <GradientStop Color="#FFDBDBDB" />
-                                    <GradientStop Color="#FFFFFFFF" Offset="1" />
-                                </LinearGradientBrush>
-                            </Setter.Value>
-                        </Setter>
+                        <Setter Property="VerticalAlignment" Value="Top" />
+                        <Setter Property="BorderThickness" Value="0" />
                     </Style>
                 </Setter.Value>
             </Setter>
@@ -62,6 +85,15 @@
 
         </Style>
         <Style TargetType="Charting:Chart" BasedOn="{StaticResource BaseChartStyle}" x:Key="ChartStyleWithLegend">
+            <Setter Property="TitleStyle">
+                <Setter.Value>
+                    <Style TargetType="DataVisualization:Title">
+                        <Setter Property="FontSize" Value="20" />
+                        <Setter Property="HorizontalAlignment" Value="Left" />
+                        <Setter Property="Margin" Value="30,5,0,5" />
+                    </Style>
+                </Setter.Value>
+            </Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Charting:Chart">
@@ -72,6 +104,7 @@
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
 
+                                <!--TODO: have the Title have margin bound to the width of the ChartArea stuff??-->
                                 <DataVisualization:Title Content="{TemplateBinding Title}" Style="{TemplateBinding TitleStyle}" />
 
                                 <!-- Use a nested Grid to avoid possible clipping behavior resulting from ColumnSpan+Width=Auto -->
@@ -83,7 +116,7 @@
 
                                     <DataVisualization:Legend x:Name="Legend" Title="{TemplateBinding LegendTitle}" Style="{TemplateBinding LegendStyle}" Grid.Column="1" />
                                     <chartingprimitives:EdgePanel x:Name="ChartArea" 
-                                                                          Style="{TemplateBinding ChartAreaStyle}" >
+                                                                  Style="{TemplateBinding ChartAreaStyle}">
                                         <Grid Canvas.ZIndex="-1" Style="{TemplateBinding PlotAreaStyle}" />
                                         <Border Canvas.ZIndex="10" BorderBrush="#FF919191" BorderThickness="1" />
                                     </chartingprimitives:EdgePanel>
@@ -121,7 +154,7 @@
         </Style>
 
     </Control.Resources>
-    <Grid x:Name="PropertyInvestmentChartsPanel">
+    <Grid x:Name="PropertyInvestmentChartsPanel" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -137,30 +170,61 @@
                         Grid.ColumnSpan="4"
                         Title="Balance"
                         Style="{StaticResource ChartStyleWithLegend}"
-                        prism:RegionManager.RegionName="{x:Static local:RegionNames.BalanceChartRegion}"/>
+                        Margin="5"
+                        prism:RegionManager.RegionName="{x:Static local:RegionNames.BalanceChartRegion}">
+            <Charting:Chart.Axes>
+                <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
+                <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
+            </Charting:Chart.Axes>
+        </Charting:Chart>
+        
         <Charting:Chart x:Name="PrincipalRemainingChartRegion"
                         Grid.Column="0"
                         Grid.Row="1"
                         Title="Remaining Principal"
                         Style="{StaticResource ChartStyleWithoutLegend}"
-                        prism:RegionManager.RegionName="{x:Static local:RegionNames.PrincipalRemainingChartRegion}"/>
+                        Margin="5,0,5,5"
+                        prism:RegionManager.RegionName="{x:Static local:RegionNames.PrincipalRemainingChartRegion}">
+            <Charting:Chart.Axes>
+                <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
+                <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
+            </Charting:Chart.Axes>
+        </Charting:Chart>
+        
         <Charting:Chart x:Name="CapitalValueChartRegion"
                         Grid.Column="1"
                         Grid.Row="1"
                         Title="Capital Value"
                         Style="{StaticResource ChartStyleWithoutLegend}"
-                        prism:RegionManager.RegionName="{x:Static local:RegionNames.CapitalValueChartRegion}"/>
+                        prism:RegionManager.RegionName="{x:Static local:RegionNames.CapitalValueChartRegion}">
+            <Charting:Chart.Axes>
+                <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
+                <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
+            </Charting:Chart.Axes>
+        </Charting:Chart>
+        
         <Charting:Chart x:Name="TotalExpensesChartRegion"
                         Grid.Column="2"
                         Grid.Row="1"
                         Title="Total Expenses"
                         Style="{StaticResource ChartStyleWithoutLegend}"
-                        prism:RegionManager.RegionName="{x:Static local:RegionNames.TotalExpensesChartRegion}"/>
+                        prism:RegionManager.RegionName="{x:Static local:RegionNames.TotalExpensesChartRegion}">
+            <Charting:Chart.Axes>
+                <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
+                <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
+            </Charting:Chart.Axes>
+        </Charting:Chart>
+        
         <Charting:Chart x:Name="MinimumPaymentChartRegion"
                         Grid.Column="3"
                         Grid.Row="1"
                         Title="Minimum Weekly payment (if re-financed)"
                         Style="{StaticResource ChartStyleWithoutLegend}"
-                        prism:RegionManager.RegionName="{x:Static local:RegionNames.MinimumPaymentChartRegion}"/>
+                        prism:RegionManager.RegionName="{x:Static local:RegionNames.MinimumPaymentChartRegion}">
+            <Charting:Chart.Axes>
+                <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
+                <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
+            </Charting:Chart.Axes>
+        </Charting:Chart>
     </Grid>
 </UserControl>

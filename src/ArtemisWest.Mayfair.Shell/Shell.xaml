@@ -4,14 +4,25 @@
         xmlns:prism="clr-namespace:Microsoft.Practices.Prism.Regions;assembly=Microsoft.Practices.Prism" 
         xmlns:Infrastructure="clr-namespace:ArtemisWest.Mayfair.Infrastructure;assembly=ArtemisWest.Mayfair.Infrastructure" 
         Title="Mayfair" 
-        Height="750" Width="925">
-    <DockPanel LastChildFill="True">
+        Style="{StaticResource WindowStyle}">
+    <DockPanel LastChildFill="True" Margin="80, 36, 36, 36">
+        <TextBlock DockPanel.Dock="Top"
+                   Text="Mayfair"
+                   Style="{StaticResource Title}" />
+
         <ItemsControl x:Name="InputPanel" 
                       DockPanel.Dock="Left" 
-                      prism:RegionManager.RegionName="{x:Static Infrastructure:RegionNames.MainInputRegion}"/>
+                      prism:RegionManager.RegionName="{x:Static Infrastructure:RegionNames.MainInputRegion}">
+            <ItemsControl.ItemContainerStyle>
+                <Style>
+                    <Setter Property="Control.Margin" Value="0,0,15,15"/>
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+        </ItemsControl>
 
         <!-- Add the toolbar to be able set up the workspace as you like (ie buttons that set the Uniform Grid's Rows/Cols etc... -->
         <ContentControl x:Name="ChartsPanel"
+                        Margin="0,-48,0,0"
                         prism:RegionManager.RegionName="{x:Static Infrastructure:RegionNames.MainChartRegion}"/>
     </DockPanel>
 

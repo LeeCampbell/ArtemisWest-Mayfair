@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SevenZip.Compression.LZMA;
 
 //TODO: Add test to actual test some known data. Ensure there is a fair range that it must hit ie: enough to pay, but not so much that it would pay the next bracket.
-namespace ArtemisWest.PropertyInvestment.Calculator.Tests
+namespace ArtemisWest.PropertyInvestment.Calculator.Tests.Repository
 {
     [TestClass]
     public class DailyCompoundedPaidWeeklyDataLoaderFixture

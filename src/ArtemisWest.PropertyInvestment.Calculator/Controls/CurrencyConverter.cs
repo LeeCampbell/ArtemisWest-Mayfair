@@ -7,11 +7,29 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Controls
     //TODO: Use ArtemisWest.Presentation.Controls.CurrencyConverter
     public sealed class CurrencyConverter : IValueConverter
     {
+        private string _format;
+        private int _precision;
+
+        public CurrencyConverter()
+        {
+            Precision = 0;
+        }
+        
+        public int Precision
+        {
+            get { return _precision; }
+            set
+            {
+                _precision = value;
+                _format = @"{0:c" + _precision + @"}";
+            }
+        }
+
         #region Implementation of IValueConverter
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return string.Format(culture, "{0:c}", value);
+            return string.Format(culture, _format, value);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

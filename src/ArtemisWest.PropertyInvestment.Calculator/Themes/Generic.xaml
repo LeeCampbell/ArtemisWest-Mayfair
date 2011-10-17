@@ -17,24 +17,7 @@
                             <TextBox x:Name="ValueText"
                                      DockPanel.Dock="Right"
                                      Width="65"
-                                     TextAlignment="Right">
-                                <TextBox.Style>
-                                    <Style TargetType="TextBox" >
-                                        <Setter Property="Width" Value="Auto"/>
-                                        <Setter Property="BorderThickness" Value="1"/>
-                                        <Setter Property="BorderBrush" Value="Transparent"/>
-                                        <Style.Triggers>
-                                            <Trigger Property="IsFocused" Value="True">
-                                                <Setter Property="BorderBrush" Value="Black"/>
-                                            </Trigger>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="BorderBrush" Value="Black"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBox.Style>
-                            </TextBox>
-
+                                     TextAlignment="Right"/>
                         </DockPanel>
                         <Slider Value="{Binding Value, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" 
                                 Minimum="{TemplateBinding MinimumValue}" 
