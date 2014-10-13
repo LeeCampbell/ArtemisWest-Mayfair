@@ -1,11 +1,11 @@
 ﻿<UserControl x:Class="ArtemisWest.PropertyInvestment.Calculator.UI.Charts.ChartRegions"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-             xmlns:prism="clr-namespace:Microsoft.Practices.Prism.Regions;assembly=Microsoft.Practices.Prism" 
              xmlns:local="clr-namespace:ArtemisWest.PropertyInvestment.Calculator" 
              xmlns:Charting="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" 
              xmlns:chartingprimitives="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=System.Windows.Controls.DataVisualization.Toolkit" 
-             xmlns:DataVisualization="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit">
+             xmlns:DataVisualization="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+             xmlns:regions="http://www.codeplex.com/CompositeWPF">
     <Control.Resources>
         <Style TargetType="Charting:LinearAxis" x:Key="YAxisStyle">
             <Setter Property="Orientation" Value="Y"/>
@@ -171,7 +171,7 @@
                         Title="Balance"
                         Style="{StaticResource ChartStyleWithLegend}"
                         Margin="5"
-                        prism:RegionManager.RegionName="{x:Static local:RegionNames.BalanceChartRegion}">
+                        regions:RegionManager.RegionName="{x:Static local:RegionNames.BalanceChartRegion}">
             <Charting:Chart.Axes>
                 <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
                 <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
@@ -184,7 +184,7 @@
                         Title="Remaining Principal"
                         Style="{StaticResource ChartStyleWithoutLegend}"
                         Margin="5,0,5,5"
-                        prism:RegionManager.RegionName="{x:Static local:RegionNames.PrincipalRemainingChartRegion}">
+                        regions:RegionManager.RegionName="{x:Static local:RegionNames.PrincipalRemainingChartRegion}">
             <Charting:Chart.Axes>
                 <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
                 <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
@@ -196,7 +196,7 @@
                         Grid.Row="1"
                         Title="Capital Value"
                         Style="{StaticResource ChartStyleWithoutLegend}"
-                        prism:RegionManager.RegionName="{x:Static local:RegionNames.CapitalValueChartRegion}">
+                        regions:RegionManager.RegionName="{x:Static local:RegionNames.CapitalValueChartRegion}">
             <Charting:Chart.Axes>
                 <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
                 <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
@@ -208,7 +208,7 @@
                         Grid.Row="1"
                         Title="Total Expenses"
                         Style="{StaticResource ChartStyleWithoutLegend}"
-                        prism:RegionManager.RegionName="{x:Static local:RegionNames.TotalExpensesChartRegion}">
+                        regions:RegionManager.RegionName="{x:Static local:RegionNames.TotalExpensesChartRegion}">
             <Charting:Chart.Axes>
                 <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
                 <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
@@ -220,7 +220,7 @@
                         Grid.Row="1"
                         Title="Minimum Weekly payment (if re-financed)"
                         Style="{StaticResource ChartStyleWithoutLegend}"
-                        prism:RegionManager.RegionName="{x:Static local:RegionNames.MinimumPaymentChartRegion}">
+                        regions:RegionManager.RegionName="{x:Static local:RegionNames.MinimumPaymentChartRegion}">
             <Charting:Chart.Axes>
                 <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
                 <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
