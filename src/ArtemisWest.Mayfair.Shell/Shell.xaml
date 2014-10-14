@@ -1,8 +1,8 @@
 ﻿<Window x:Class="ArtemisWest.Mayfair.Shell.Shell"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-        xmlns:prism="clr-namespace:Microsoft.Practices.Prism.Regions;assembly=Microsoft.Practices.Prism" 
-        xmlns:Infrastructure="clr-namespace:ArtemisWest.Mayfair.Infrastructure;assembly=ArtemisWest.Mayfair.Infrastructure" 
+        xmlns:infrastructure="clr-namespace:ArtemisWest.Mayfair.Infrastructure;assembly=ArtemisWest.Mayfair.Infrastructure"
+        xmlns:regions="http://www.codeplex.com/CompositeWPF"
         Title="Mayfair" 
         Style="{StaticResource WindowStyle}">
     <DockPanel LastChildFill="True" Margin="80, 36, 36, 36">
@@ -12,7 +12,7 @@
 
         <ItemsControl x:Name="InputPanel" 
                       DockPanel.Dock="Left" 
-                      prism:RegionManager.RegionName="{x:Static Infrastructure:RegionNames.MainInputRegion}">
+                      regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.MainInputRegion}">
             <ItemsControl.ItemContainerStyle>
                 <Style>
                     <Setter Property="Control.Margin" Value="0,0,15,15"/>
@@ -23,7 +23,7 @@
         <!-- Add the toolbar to be able set up the workspace as you like (ie buttons that set the Uniform Grid's Rows/Cols etc... -->
         <ContentControl x:Name="ChartsPanel"
                         Margin="0,-48,0,0"
-                        prism:RegionManager.RegionName="{x:Static Infrastructure:RegionNames.MainChartRegion}"/>
+                        regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.MainChartRegion}"/>
     </DockPanel>
 
 </Window>

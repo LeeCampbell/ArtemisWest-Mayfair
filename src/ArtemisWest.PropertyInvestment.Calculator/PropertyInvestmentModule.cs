@@ -23,7 +23,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator
 
         public void Initialize()
         {
-            ConfigureRegionManager();
+            ConfigureRegionManager(_container);
 
             var singleton = new ContainerControlledLifetimeManager();
             _container.RegisterType<IModule, PropertyInvestmentModule>();
@@ -44,7 +44,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator
 
         #endregion
 
-        private static void ConfigureRegionManager()
+        private static void ConfigureRegionManager(IUnityContainer container)
         {
             var instance = ServiceLocator.Current.GetInstance<RegionAdapterMappings>();
             instance.RegisterMapping(typeof(Chart), ServiceLocator.Current.GetInstance<ChartRegionAdapter>());
