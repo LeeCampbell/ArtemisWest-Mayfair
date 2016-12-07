@@ -6,27 +6,16 @@ using ArtemisWest.Mayfair.Infrastructure;
 using ArtemisWest.PropertyInvestment.Calculator.Repository;
 using ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculation;
 using ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Input;
-using Microsoft.Practices.Prism.ViewModel;
 using Unit = System.Reactive.Unit;
 using System.Reactive.Disposables;
 
 namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
 {
-    public class RentalPropertyViewModel : NotificationObject, IDisposable
+    public class RentalPropertyViewModel : IDisposable
     {
         private const int TermInDays = 10958;   //365.25 * 30;
         private readonly IDailyCompoundedMortgageRepository _mortgageRepository;
         private readonly ISchedulerProvider _schedulerProvider;
-
-        private readonly RentalPropertyInputViewModel _input = new RentalPropertyInputViewModel();
-        private readonly CalculationViewModel _principalRemaining = new CalculationViewModel(TermInDays);
-        private readonly CalculationViewModel _minimumPayment = new CalculationViewModel(TermInDays);
-        private readonly CalculationViewModel _capitalValue = new CalculationViewModel(TermInDays);
-        private readonly CalculationViewModel _totalIncome = new CalculationViewModel(TermInDays);
-        private readonly CalculationViewModel _totalExpenses = new CalculationViewModel(TermInDays);
-        private readonly CalculationViewModel _balance = new CalculationViewModel(TermInDays);
-        private readonly CalculationViewModel _monthlyIncome = new CalculationViewModel(TermInDays);
-        private readonly CalculationViewModel _monthlyExpenses = new CalculationViewModel(TermInDays);
 
         private IDisposable _currentEvaluation;
         private readonly IDisposable _inputChangeSubscription;
@@ -54,50 +43,25 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
             return Math.Round(absoluteMin, 2, MidpointRounding.AwayFromZero);
         }
 
-        public RentalPropertyInputViewModel Input
-        {
-            get { return _input; }
-        }
+        public RentalPropertyInputViewModel Input { get; } = new RentalPropertyInputViewModel();
 
-        public CalculationViewModel PrincipalRemaining
-        {
-            get { return _principalRemaining; }
-        }
+        public CalculationViewModel CapitalLiabilityValue { get; } = new CalculationViewModel(TermInDays);
 
-        public CalculationViewModel MinimumPayment
-        {
-            get { return _minimumPayment; }
-        }
+        public CalculationViewModel MinimumPayment { get; } = new CalculationViewModel(TermInDays);
 
-        public CalculationViewModel CapitalValue
-        {
-            get { return _capitalValue; }
-        }
+        public CalculationViewModel CapitalAssetValue { get; } = new CalculationViewModel(TermInDays);
 
-        public CalculationViewModel TotalIncome
-        {
-            get { return _totalIncome; }
-        }
+        public CalculationViewModel GrossCashflowIncome { get; } = new CalculationViewModel(TermInDays);
 
-        public CalculationViewModel TotalExpenses
-        {
-            get { return _totalExpenses; }
-        }
+        public CalculationViewModel GrossCashflowExpenses { get; } = new CalculationViewModel(TermInDays);
 
-        public CalculationViewModel Balance
-        {
-            get { return _balance; }
-        }
+        public CalculationViewModel GrossCashflow { get; } = new CalculationViewModel(TermInDays);
 
-        public CalculationViewModel MonthlyIncome
-        {
-            get { return _monthlyIncome; }
-        }
+        public CalculationViewModel Balance { get; } = new CalculationViewModel(TermInDays);
 
-        public CalculationViewModel MonthlyExpenses
-        {
-            get { return _monthlyExpenses; }
-        }
+        public CalculationViewModel MonthlyIncome { get; } = new CalculationViewModel(TermInDays);
+
+        public CalculationViewModel MonthlyExpenses { get; } = new CalculationViewModel(TermInDays);
 
         #region Implementation of IDisposable
 
@@ -143,87 +107,94 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
             Debug.WriteLine("  UpdateValues()");
             
             SetChartsAsDirty();
-
-            //Check if the Rate is within the Loaded range
-            var annualInterestRate = Input.LoanInterestRate;
-            if (!IsRateValid(annualInterestRate))
-            {
-                return Disposable.Empty;
-            }
-
-            var yearlyGrowth = Input.CaptialGrowth;
-            var seed = new Accumulator
-            {
-                CaptialValue = Input.InitialCapitalValue,
-                PrincipalRemaining = Input.InitialLoanAmount
-            };
-
-            var weeklyMortgagePayment = GetMinimumPayment(seed.PrincipalRemaining, TermInDays, annualInterestRate);
-            var weeklyRentalIncome = Input.WeeklyRentalIncome;
-
-            return Observable.Range(0, TermInDays)
-                .Scan(
-                    seed,
-                    (acc, i) =>
+            return Observable.Create<Accumulator>(o =>
+                {
+                    //Check if the Rate is within the Loaded range
+                    var annualInterestRate = Input.LoanInterestRate;
+                    if (!IsRateValid(annualInterestRate))
                     {
-                        //TODO: put in some logging to find out why the tails de-values?
-                        DateTime date = DateTime.Today.AddDays(i);
-                        var daysInYear = date.DaysInYear();
-                        var dailyGrowth = 1m + (yearlyGrowth / daysInYear);
-                        var interestAccrued = acc.InterestAccrued + (annualInterestRate * acc.PrincipalRemaining) * (1M / daysInYear);
-                        var interestCharged = 0m;
-                        var principalRemaining = acc.PrincipalRemaining;
-                        var dailyIncome = 0m;
-                        if (date.Day == 1)
-                        {
-                            interestCharged = interestAccrued;
-                            interestAccrued = 0m;
-                            principalRemaining = principalRemaining + interestCharged;
-                        }
-                        if (date.DayOfWeek == DayOfWeek.Friday)
-                        {
-                            principalRemaining = principalRemaining - weeklyMortgagePayment;
-                            dailyIncome = weeklyRentalIncome - weeklyMortgagePayment;
-                        }
-                        decimal minPayment;
-                        if (principalRemaining < 0)
-                        {
-                            principalRemaining = 0m;
-                            minPayment = 0m;
-                            //TODO: Start logging  = true
-                        }
-                        else
-                        {
-                            minPayment = GetMinimumPayment(acc.PrincipalRemaining, TermInDays - i, annualInterestRate);
-                        }
-
-                        return new Accumulator
-                        {
-                            Index = i,
-                            CaptialValue = acc.CaptialValue * dailyGrowth,
-                            PrincipalRemaining = principalRemaining,
-                            TotalIncome = acc.TotalIncome + dailyIncome,
-                            InterestAccrued = interestAccrued,
-                            InterestCharged = interestCharged,
-                            TotalInterestCharged = acc.TotalInterestCharged + interestCharged,
-                            MinimumPayment = minPayment,
-                        };
+                        return Disposable.Empty;
                     }
-                )
+
+                    var yearlyGrowth = Input.CaptialGrowth;
+                    var seed = new Accumulator
+                    {
+                        CapitalAssetValue = Input.InitialCapitalValue,
+                        CapitalLiabilityValue = Input.InitialLoanAmount,
+                        PrincipalBalance = Input.InitialLoanAmount
+                    };
+
+                    var weeklyMortgagePayment = GetMinimumPayment(seed.CapitalLiabilityValue, TermInDays, annualInterestRate);
+                    var weeklyRentalIncome = Input.WeeklyRentalIncome;
+
+                    return Observable.Range(0, TermInDays)
+                        .Scan(
+                            seed,
+                            (acc, i) =>
+                            {
+                                var date = DateTime.Today.AddDays(i);
+                                var daysInYear = date.DaysInYear();
+                                var dailyGrowth = 1m + (yearlyGrowth/daysInYear);
+
+                                var interestAccrued = acc.InterestAccrued +
+                                                        (annualInterestRate*
+                                                        acc.CapitalLiabilityValue)*
+                                                        (1M/daysInYear);
+                                var interestCharged = 0m;
+                                var loanBalance = acc.CapitalLiabilityValue;
+                                var dailyIncome = 0m;
+                                if (date.Day == 1)
+                                {
+                                    interestCharged = interestAccrued;
+                                    interestAccrued = 0m;
+                                    loanBalance = loanBalance + interestCharged;
+                                }
+                                if (date.DayOfWeek == DayOfWeek.Friday)
+                                {
+                                    var mortgagePayment = Math.Min(loanBalance, weeklyMortgagePayment);
+                                    loanBalance = loanBalance - mortgagePayment;
+                                    dailyIncome = weeklyRentalIncome;
+                                }
+                                decimal minPayment;
+                                if (loanBalance < 0)
+                                {
+                                    loanBalance = 0m;
+                                    minPayment = 0m;
+                                }
+                                else
+                                {
+                                    minPayment = GetMinimumPayment(acc.CapitalLiabilityValue, TermInDays - i, annualInterestRate);
+                                }
+
+                                return new Accumulator
+                                {
+                                    Index = i,
+                                    CapitalAssetValue = acc.CapitalAssetValue*dailyGrowth,
+                                    CapitalLiabilityValue = loanBalance,
+                                    InterestAccrued = interestAccrued,
+                                    InterestCharged = interestCharged,
+                                    GrossCashflowIncome = acc.GrossCashflowIncome + dailyIncome,
+                                    GrossCashflowExpenses = acc.GrossCashflowExpenses + interestCharged,
+                                    MinimumPayment = minPayment,
+                                };
+                            }
+                        ).Subscribe(o);
+                })
                 .Buffer(50.Milliseconds(), 1000, _schedulerProvider.ThreadPool) //Every 50ms or every 1000 events, which ever is more often.
                 .SubscribeOn(_schedulerProvider.ThreadPool)
                 .ObserveOn(_schedulerProvider.Dispatcher)
                 .Subscribe(kvps =>
                 {
-                    Debug.WriteLine("Recieved {0} in batch", kvps.Count);
+                    Debug.WriteLine("Received {0} in batch", kvps.Count);
                     foreach (var kvp in kvps)
                     {
-                        CapitalValue.ResultOverTime[kvp.Index].Value = kvp.CaptialValue;
-                        TotalExpenses.ResultOverTime[kvp.Index].Value = kvp.TotalInterestCharged;   //?May need to re-assess this.
+                        CapitalAssetValue.ResultOverTime[kvp.Index].Value = kvp.CapitalAssetValue;
+                        CapitalLiabilityValue.ResultOverTime[kvp.Index].Value = kvp.CapitalLiabilityValue;
+                        GrossCashflowExpenses.ResultOverTime[kvp.Index].Value = kvp.GrossCashflowExpenses;
+                        GrossCashflowIncome.ResultOverTime[kvp.Index].Value = kvp.GrossCashflowIncome;
+                        GrossCashflow.ResultOverTime[kvp.Index].Value = kvp.GrossCashflowIncome - kvp.GrossCashflowExpenses;
+                        Balance.ResultOverTime[kvp.Index].Value = kvp.CapitalAssetValue - kvp.CapitalLiabilityValue + kvp.GrossCashflowIncome - kvp.GrossCashflowExpenses;
                         MinimumPayment.ResultOverTime[kvp.Index].Value = kvp.MinimumPayment;
-                        TotalIncome.ResultOverTime[kvp.Index].Value = kvp.TotalIncome;              //?...Or this.
-                        PrincipalRemaining.ResultOverTime[kvp.Index].Value = kvp.PrincipalRemaining;
-                        Balance.ResultOverTime[kvp.Index].Value = kvp.CaptialValue - kvp.PrincipalRemaining + kvp.TotalIncome; //?... and this.
                     }
                 },
                 () => Debug.WriteLine("UpdateValues Completed."));
@@ -244,11 +215,11 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
 
         private void SetChartsAsDirty()
         {
-            CapitalValue.IsDirty =
-                TotalExpenses.IsDirty =
+            CapitalAssetValue.IsDirty =
+                GrossCashflowExpenses.IsDirty =
                 MinimumPayment.IsDirty =
-                TotalIncome.IsDirty =
-                PrincipalRemaining.IsDirty =
+                GrossCashflowIncome.IsDirty =
+                CapitalLiabilityValue.IsDirty =
                 Balance.IsDirty = true;
         }
 
@@ -260,13 +231,15 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
         private sealed class Accumulator
         {
             public int Index { get; set; }
-            public decimal CaptialValue { get; set; }       //Assets
-            public decimal PrincipalRemaining { get; set; } //Liabilities
+            public decimal CapitalAssetValue { get; set; }       //Assets
+            public decimal CapitalLiabilityValue { get; set; }   //Liabilities
+            public decimal PrincipalBalance { get; set; }   
+            public decimal InterestBalance { get; set; }   
             public decimal MinimumPayment { get; set; }
-            public decimal InterestAccrued { get; set; }
+            public decimal InterestAccrued { get; set; }        //Accrueing in the background,but not charged yet, so want incur interest itself. Normally accrued interest is charged/Cystalized at EOM.
             public decimal InterestCharged { get; set; }
-            public decimal TotalInterestCharged { get; set; }
-            public decimal TotalIncome { get; set; }        //Cashflow, could be negative if expenses exceed income.
+            public decimal GrossCashflowExpenses { get; set; }
+            public decimal GrossCashflowIncome { get; set; }        //Cashflow, could be negative if expenses exceed income.
         }
     }
 }

@@ -178,37 +178,39 @@
             </Charting:Chart.Axes>
         </Charting:Chart>
         
-        <Charting:Chart x:Name="PrincipalRemainingChartRegion"
+        
+        <Charting:Chart x:Name="AssetValueChartRegion"
                         Grid.Column="0"
                         Grid.Row="1"
-                        Title="Remaining Principal"
+                        Title="Asset Value"
                         Style="{StaticResource ChartStyleWithoutLegend}"
-                        Margin="5,0,5,5"
-                        regions:RegionManager.RegionName="{x:Static local:RegionNames.PrincipalRemainingChartRegion}">
+                        regions:RegionManager.RegionName="{x:Static local:RegionNames.AssetValueChartRegion}">
             <Charting:Chart.Axes>
                 <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
                 <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
             </Charting:Chart.Axes>
         </Charting:Chart>
-        
-        <Charting:Chart x:Name="CapitalValueChartRegion"
+
+        <Charting:Chart x:Name="LiabilityValueChartRegion"
                         Grid.Column="1"
                         Grid.Row="1"
-                        Title="Capital Value"
+                        Title="Liability value"
                         Style="{StaticResource ChartStyleWithoutLegend}"
-                        regions:RegionManager.RegionName="{x:Static local:RegionNames.CapitalValueChartRegion}">
+                        Margin="5,0,5,5"
+                        regions:RegionManager.RegionName="{x:Static local:RegionNames.LiabilityValueChartRegion}">
             <Charting:Chart.Axes>
                 <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
                 <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
             </Charting:Chart.Axes>
         </Charting:Chart>
-        
+
+
         <Charting:Chart x:Name="TotalExpensesChartRegion"
                         Grid.Column="2"
                         Grid.Row="1"
-                        Title="Total Expenses"
+                        Title="Cash balance"
                         Style="{StaticResource ChartStyleWithoutLegend}"
-                        regions:RegionManager.RegionName="{x:Static local:RegionNames.TotalExpensesChartRegion}">
+                        regions:RegionManager.RegionName="{x:Static local:RegionNames.GrossCashBalanceChartRegion}">
             <Charting:Chart.Axes>
                 <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
                 <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
