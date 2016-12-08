@@ -34,9 +34,11 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
         public void Show()
         {
             _regionManager.AddToRegion(RegionNames.MainInputRegion, ViewModel.Input);
-            ShowChart(RegionNames.LiabilityValueChartRegion, ViewModel.CapitalLiabilityValue);
+            
             ShowChart(RegionNames.AssetValueChartRegion, ViewModel.CapitalAssetValue);
-            //ShowChart(RegionNames.TotalExpensesChartRegion, ViewModel.TotalExpenses);
+            ShowChart(RegionNames.LiabilityValueChartRegion, ViewModel.CapitalLiabilityValue);
+            ShowChart(RegionNames.GrossIncomeChartRegion, ViewModel.GrossCashflowIncome);
+            ShowChart(RegionNames.GrossExpensesChartRegion, ViewModel.GrossCashflowExpenses);
             ShowChart(RegionNames.GrossCashBalanceChartRegion, ViewModel.GrossCashflow);
             ShowChart(RegionNames.MinimumPaymentChartRegion, ViewModel.MinimumPayment);
             ShowChart(RegionNames.BalanceChartRegion, ViewModel.Balance);

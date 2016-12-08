@@ -154,13 +154,7 @@
         </Style>
 
     </Control.Resources>
-    <Grid x:Name="PropertyInvestmentChartsPanel" >
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+    <Grid x:Name="PropertyInvestmentChartsPanel">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -177,56 +171,69 @@
                 <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
             </Charting:Chart.Axes>
         </Charting:Chart>
-        
-        
-        <Charting:Chart x:Name="AssetValueChartRegion"
-                        Grid.Column="0"
-                        Grid.Row="1"
-                        Title="Asset Value"
-                        Style="{StaticResource ChartStyleWithoutLegend}"
-                        regions:RegionManager.RegionName="{x:Static local:RegionNames.AssetValueChartRegion}">
-            <Charting:Chart.Axes>
-                <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
-                <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
-            </Charting:Chart.Axes>
-        </Charting:Chart>
+        <UniformGrid Grid.Row="1" Rows="1">
+            
+            <Charting:Chart x:Name="AssetValueChartRegion"
+                            Title="Asset Value"
+                            Style="{StaticResource ChartStyleWithoutLegend}"
+                            regions:RegionManager.RegionName="{x:Static local:RegionNames.AssetValueChartRegion}">
+                <Charting:Chart.Axes>
+                    <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
+                    <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
+                </Charting:Chart.Axes>
+            </Charting:Chart>
 
-        <Charting:Chart x:Name="LiabilityValueChartRegion"
-                        Grid.Column="1"
-                        Grid.Row="1"
-                        Title="Liability value"
-                        Style="{StaticResource ChartStyleWithoutLegend}"
-                        Margin="5,0,5,5"
-                        regions:RegionManager.RegionName="{x:Static local:RegionNames.LiabilityValueChartRegion}">
-            <Charting:Chart.Axes>
-                <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
-                <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
-            </Charting:Chart.Axes>
-        </Charting:Chart>
+            <Charting:Chart x:Name="LiabilityValueChartRegion"
+                            Title="Liability value"
+                            Style="{StaticResource ChartStyleWithoutLegend}"
+                            Margin="5,0,5,5"
+                            regions:RegionManager.RegionName="{x:Static local:RegionNames.LiabilityValueChartRegion}">
+                <Charting:Chart.Axes>
+                    <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
+                    <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
+                </Charting:Chart.Axes>
+            </Charting:Chart>
 
+            <Charting:Chart x:Name="TotalIncomeChartRegion"
+                            Title="Gross Income"
+                            Style="{StaticResource ChartStyleWithoutLegend}"
+                            regions:RegionManager.RegionName="{x:Static local:RegionNames.GrossIncomeChartRegion}">
+                <Charting:Chart.Axes>
+                    <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
+                    <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
+                </Charting:Chart.Axes>
+            </Charting:Chart>
 
-        <Charting:Chart x:Name="TotalExpensesChartRegion"
-                        Grid.Column="2"
-                        Grid.Row="1"
-                        Title="Cash balance"
-                        Style="{StaticResource ChartStyleWithoutLegend}"
-                        regions:RegionManager.RegionName="{x:Static local:RegionNames.GrossCashBalanceChartRegion}">
-            <Charting:Chart.Axes>
-                <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
-                <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
-            </Charting:Chart.Axes>
-        </Charting:Chart>
-        
-        <Charting:Chart x:Name="MinimumPaymentChartRegion"
-                        Grid.Column="3"
-                        Grid.Row="1"
-                        Title="Minimum Weekly payment (if re-financed)"
-                        Style="{StaticResource ChartStyleWithoutLegend}"
-                        regions:RegionManager.RegionName="{x:Static local:RegionNames.MinimumPaymentChartRegion}">
-            <Charting:Chart.Axes>
-                <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
-                <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
-            </Charting:Chart.Axes>
-        </Charting:Chart>
+            <Charting:Chart x:Name="TotalExpensesChartRegion"
+                            Title="Gross Expenses"
+                            Style="{StaticResource ChartStyleWithoutLegend}"
+                            regions:RegionManager.RegionName="{x:Static local:RegionNames.GrossExpensesChartRegion}">
+                <Charting:Chart.Axes>
+                    <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
+                    <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
+                </Charting:Chart.Axes>
+            </Charting:Chart>
+            
+            <Charting:Chart x:Name="TotalCashFlowChartRegion"
+                            Title="Gross Cashflow"
+                            Style="{StaticResource ChartStyleWithoutLegend}"
+                            regions:RegionManager.RegionName="{x:Static local:RegionNames.GrossCashBalanceChartRegion}">
+                <Charting:Chart.Axes>
+                    <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
+                    <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
+                </Charting:Chart.Axes>
+            </Charting:Chart>
+
+            <Charting:Chart x:Name="MinimumPaymentChartRegion"
+                            Title="Minimum Weekly payment (if re-financed)"
+                            Style="{StaticResource ChartStyleWithoutLegend}"
+                            regions:RegionManager.RegionName="{x:Static local:RegionNames.MinimumPaymentChartRegion}">
+                <Charting:Chart.Axes>
+                    <Charting:LinearAxis Style="{StaticResource YAxisStyle}"/>
+                    <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
+                </Charting:Chart.Axes>
+            </Charting:Chart>
+
+        </UniformGrid>
     </Grid>
 </UserControl>
