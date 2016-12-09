@@ -53,7 +53,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Repository
 
         public void Load()
         {
-            if (IsLoaded.First()) return;
+            if (_isLoaded.Value) return;
             if (System.Threading.Interlocked.CompareExchange(ref _isLoading, 1, 0) != 0)
             {
                 return;
@@ -74,8 +74,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Repository
         {
             if (rate < _minimumRate || rate > _maximumRate)
             {
-                var message = string.Format("Rate is outside of the supported range of {0} to {1}", _minimumRate, _maximumRate);
-                throw new ArgumentOutOfRangeException("rate", message);
+                throw new ArgumentOutOfRangeException("rate", $"Rate is outside of the supported range of {_minimumRate} to {_maximumRate}");
             }
 
             byte t = term < 0.5m && term > 0
@@ -152,7 +151,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Repository
             }
             catch (KeyNotFoundException ex)
             {
-                throw new ArgumentOutOfRangeException(string.Format("Could not find data for arguments MinPayment({0}, {1}, {2})", term, principal, rate), ex);
+                throw new ArgumentOutOfRangeException($"Could not find data for arguments MinPayment({term}, {principal}, {rate})", ex);
             }
         }
 

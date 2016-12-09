@@ -11,13 +11,18 @@ using System.Reactive.Disposables;
 
 namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
 {
+    //TODO: have the ability to choose if extra weekly income should pay down loan or be retained as cash
+    //...actually this sounds like some sort of composition feature?
+    //  So maybe this could have the flag to apply excess to loan or not.
+    //  Then decorate it with a "SavingsAccount" which applies interest to a net cash balance.
+    //  However, maybe we should always pay down as much as we can? hmmmm
     public class RentalPropertyViewModel : IDisposable
     {
         private const int TermInDays = 10958;   //365.25 * 30;
         private readonly IDailyCompoundedMortgageRepository _mortgageRepository;
         private readonly ISchedulerProvider _schedulerProvider;
 
-        private IDisposable _currentEvaluation;
+        private readonly SerialDisposable _currentEvaluation = new SerialDisposable();
         private readonly IDisposable _inputChangeSubscription;
 
         public RentalPropertyViewModel(IDailyCompoundedMortgageRepository mortgageRepository, ISchedulerProvider schedulerProvider)
@@ -30,17 +35,6 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
             _inputChangeSubscription = SubscribeToInputChanges();
 
             _mortgageRepository.Load();
-        }
-
-        public decimal GetMinimumPayment(decimal principal, int termInDays, decimal interestRate)
-        {
-            if (principal <= 0)
-            {
-                return 0m;
-            }
-            decimal term = termInDays / 365.25m;
-            var absoluteMin = _mortgageRepository.GetMinimumMonthlyPayment(principal, term, interestRate);
-            return Math.Round(absoluteMin, 2, MidpointRounding.AwayFromZero);
         }
 
         public RentalPropertyInputViewModel Input { get; } = new RentalPropertyInputViewModel();
@@ -79,6 +73,17 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
             Balance.SetTitle(Input.Title);
         }
 
+        private decimal GetMinimumPayment(decimal principal, int termInDays, decimal interestRate)
+        {
+            if (principal <= 0)
+            {
+                return 0m;
+            }
+            decimal term = termInDays / 365.25m;
+            var absoluteMin = _mortgageRepository.GetMinimumMonthlyPayment(principal, term, interestRate);
+            return Math.Round(absoluteMin, 2, MidpointRounding.AwayFromZero);
+        }
+
         private IDisposable SubscribeToInputChanges()
         {
             var inputPropertyChanges =
@@ -98,8 +103,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
 
         private void Reevaluate()
         {
-            using (_currentEvaluation) { }
-            _currentEvaluation = UpdateValues();
+            _currentEvaluation.Disposable = UpdateValues();
         }
 
         private IDisposable UpdateValues()
@@ -131,10 +135,9 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                          {
                              var date = DateTime.Today.AddDays(i);
                              decimal daysInYear = date.DaysInYear();
+
                              var acc = prev.CloneForIndex(i);
-
                              acc.AccrueInterestForDay(daysInYear);
-
                              if (date.Day == 1)
                              {
                                  acc.ChargeInterest();
@@ -150,27 +153,27 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                          }
                     ).Subscribe(o);
             })
-                .Buffer(50.Milliseconds(), 1000, _schedulerProvider.ThreadPool) //Every 50ms or every 1000 events, which ever is more often.
-                .SubscribeOn(_schedulerProvider.ThreadPool)
-                .ObserveOn(_schedulerProvider.Dispatcher)
-                .Subscribe(snapshots =>
+            .Buffer(50.Milliseconds(), 1000, _schedulerProvider.ThreadPool) //Every 50ms or every 1000 events, which ever is more often.
+            .SubscribeOn(_schedulerProvider.ThreadPool)
+            .ObserveOn(_schedulerProvider.Dispatcher)
+            .Subscribe(snapshots =>
+            {
+                Debug.WriteLine("Received {0} in batch", snapshots.Count);
+
+                foreach (var snapshot in snapshots)
                 {
-                    Debug.WriteLine("Received {0} in batch", snapshots.Count);
+                    //Debug.WriteLine($"{snapshot.CapitalAssetValue}, {snapshot.PrincipalBalance}, {snapshot.GrossCashflowIncome}, {snapshot.GrossCashflowExpenses}");
 
-                    foreach (var snapshot in snapshots)
-                    {
-                        //Debug.WriteLine($"{snapshot.CapitalAssetValue}, {snapshot.PrincipalBalance}, {snapshot.GrossCashflowIncome}, {snapshot.GrossCashflowExpenses}");
-
-                        CapitalAssetValue.ResultOverTime[snapshot.Index].Value = snapshot.CapitalAssetValue;
-                        CapitalLiabilityValue.ResultOverTime[snapshot.Index].Value = snapshot.PrincipalBalance;   //Not LoanBalance which is principal + interest. however interest is already displayed as an expense -LC
-                        GrossCashflowExpenses.ResultOverTime[snapshot.Index].Value = snapshot.GrossCashflowExpenses;
-                        GrossCashflowIncome.ResultOverTime[snapshot.Index].Value = snapshot.GrossCashflowIncome;
-                        GrossCashflow.ResultOverTime[snapshot.Index].Value = snapshot.NetCashBalance;
-                        Balance.ResultOverTime[snapshot.Index].Value = snapshot.NetBalance;
-                        MinimumPayment.ResultOverTime[snapshot.Index].Value = snapshot.CalculateMinimumPayment();
-                    }
-                },
-                () => Debug.WriteLine("UpdateValues Completed."));
+                    CapitalAssetValue.ResultOverTime[snapshot.Index].Value = snapshot.CapitalAssetValue;
+                    CapitalLiabilityValue.ResultOverTime[snapshot.Index].Value = snapshot.PrincipalBalance;   //Not LoanBalance which is principal + interest. however interest is already displayed as an expense -LC
+                    GrossCashflowExpenses.ResultOverTime[snapshot.Index].Value = snapshot.GrossCashflowExpenses;
+                    GrossCashflowIncome.ResultOverTime[snapshot.Index].Value = snapshot.GrossCashflowIncome;
+                    GrossCashflow.ResultOverTime[snapshot.Index].Value = snapshot.NetCashBalance;
+                    Balance.ResultOverTime[snapshot.Index].Value = snapshot.NetBalance;
+                    MinimumPayment.ResultOverTime[snapshot.Index].Value = snapshot.CalculateMinimumPayment();
+                }
+            },
+            () => Debug.WriteLine("UpdateValues Completed."));
         }
 
         private bool IsRateValid(decimal annualInterestRate)
@@ -222,14 +225,14 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
             public int Index { get; private set; }
             public decimal CapitalAssetValue { get; private set; }       //Assets
             public decimal PrincipalBalance { get; private set; }
-            public decimal InterestAccrued { get; private set; }        //Accruing in the background,but not charged yet, so want incur interest itself. Normally accrued interest is charged/Cystalized at EOM.
-            public decimal InterestCharged { get; private set; }
             public decimal GrossCashflowExpenses { get; private set; }
             public decimal GrossCashflowIncome { get; private set; }        //Cashflow, could be negative if expenses exceed income.
+            private decimal InterestAccrued { get; set; }        //Accruing in the background,but not charged yet, so want incur interest itself. Normally accrued interest is charged/Cystalized at EOM.
+            private decimal InterestCharged { get; set; }
 
-            public decimal LoanBalance { get { return PrincipalBalance + InterestCharged; } }
-            public decimal NetCashBalance { get { return GrossCashflowIncome - GrossCashflowExpenses; } }
-            public decimal NetBalance { get { return CapitalAssetValue - PrincipalBalance + NetCashBalance; } }
+            public decimal LoanBalance => PrincipalBalance + InterestCharged;
+            public decimal NetCashBalance => GrossCashflowIncome - GrossCashflowExpenses;
+            public decimal NetBalance => CapitalAssetValue - PrincipalBalance + NetCashBalance;
 
 
             public void AccrueInterestForDay(decimal daysInYear)
