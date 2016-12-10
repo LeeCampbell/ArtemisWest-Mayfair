@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reactive.Linq;
 using ArtemisWest.PropertyInvestment.Calculator.Repository;
 using ArtemisWest.PropertyInvestment.Calculator.Repository.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -18,7 +17,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Tests.Repository
         static DailyCompoundedPaidWeeklyDataLoaderFixture()
         {
             var sut = new DailyCompoundedPaidWeeklyDataLoader();
-            var data = sut.MinimumPayments.ToEnumerable().SelectMany(set=>set);
+            var data = sut.MinimumPayments();
             _data = new List<Row>(data);    //Big slow blocking call.
         }
 
@@ -64,7 +63,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Tests.Repository
             CollectionAssert.AreEqual(expected, actual);
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public void Not_a_test_xxx_Generate_the_new_data_structure()
         {
             //TODO: Split the files into Interest rate splits, not term. Ie load 0-8% as fast as possible (most standard rates)

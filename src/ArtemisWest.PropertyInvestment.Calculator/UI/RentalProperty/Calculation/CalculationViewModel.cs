@@ -6,7 +6,6 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculatio
 {
     public sealed class CalculationViewModel : NotificationObject
     {
-        private readonly int _termInDays;
         private readonly PositionViewModel[] _resultOverTime;
         private string _title;
         private bool _isDirty;
@@ -18,11 +17,11 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculatio
 
         public CalculationViewModel(int termInDays, DateTime startDate)
         {
-            _termInDays = termInDays;
-            _resultOverTime = new PositionViewModel[_termInDays];
+            var termInDays1 = termInDays;
+            _resultOverTime = new PositionViewModel[termInDays1];
 
             var currentDate = startDate;
-            for (var i = 0; i < _termInDays; i++)
+            for (var i = 0; i < termInDays1; i++)
             {
                 _resultOverTime[i] = new PositionViewModel(currentDate);
                 currentDate = currentDate.AddDays(1);

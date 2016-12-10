@@ -7,6 +7,7 @@
              xmlns:DataVisualization="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
              xmlns:regions="http://www.codeplex.com/CompositeWPF">
     <Control.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <Style TargetType="Charting:LinearAxis" x:Key="YAxisStyle">
             <Setter Property="Orientation" Value="Y"/>
             <Setter Property="ShowGridLines" Value="True"/>
@@ -172,7 +173,7 @@
             </Charting:Chart.Axes>
         </Charting:Chart>
         <UniformGrid Grid.Row="1" Rows="1">
-            
+
             <Charting:Chart x:Name="AssetValueChartRegion"
                             Title="Asset Value"
                             Style="{StaticResource ChartStyleWithoutLegend}"
@@ -213,7 +214,7 @@
                     <Charting:DateTimeAxis Style="{StaticResource XAxisStyle}"/>
                 </Charting:Chart.Axes>
             </Charting:Chart>
-            
+
             <Charting:Chart x:Name="TotalCashFlowChartRegion"
                             Title="Gross Cashflow"
                             Style="{StaticResource ChartStyleWithoutLegend}"

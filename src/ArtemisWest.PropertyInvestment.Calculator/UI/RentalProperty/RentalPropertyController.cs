@@ -16,7 +16,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
             _viewModel = viewModel;
 
             //TODO: Get from some local cache, like a cookie. ie whatever they typed last.
-            _viewModel.Input.Title = string.Format("Investment {0}", ++_counter);
+            _viewModel.Input.Title = $"Investment {++_counter}";
 
             _viewModel.Input.InitialCapitalValue = 440000m;
             _viewModel.Input.InitialLoanAmount = 413000m;
@@ -42,6 +42,8 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
             ShowChart(RegionNames.GrossCashBalanceChartRegion, ViewModel.GrossCashflow);
             ShowChart(RegionNames.MinimumPaymentChartRegion, ViewModel.MinimumPayment);
             ShowChart(RegionNames.BalanceChartRegion, ViewModel.Balance);
+            _regionManager.AddToRegion(RegionNames.ViewModelProgressRegion, ViewModel);
+            _viewModel.Load();
         }
 
         private void ShowChart(string region, CalculationViewModel calculationViewModel)

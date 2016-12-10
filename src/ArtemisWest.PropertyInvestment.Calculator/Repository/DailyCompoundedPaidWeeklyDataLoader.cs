@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Reflection;
 using System.Text;
 using ArtemisWest.PropertyInvestment.Calculator.Repository.Entities;
@@ -12,38 +11,17 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Repository
 {
     sealed class DailyCompoundedPaidWeeklyDataLoader
     {
-        private readonly IObservable<IEnumerable<Row>> _minimumPayments;
+        private static readonly string DataPrefix;
+        private static readonly Assembly ExecutingAsssembly;
 
         //TODO: Split the files into Interest rate splits, not term. Ie load 0-8% as fast as possible (most standard rates)
         //TODO: in the ctor create the List<Row> and then AddRange as the rows come in. Will need to come in ordered. 
         //      -Or perhaps just OnNext the lot -
         //      OnNext the New Min-Max Interest Rates
-
-
-        public DailyCompoundedPaidWeeklyDataLoader()
+        static DailyCompoundedPaidWeeklyDataLoader()
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            var dataPrefix = string.Format("{0}.Data.DailyCompounded_PaidWeekly", assembly.GetName().Name);
-
-            _minimumPayments = Observable.Create<IEnumerable<Row>>(
-                o =>
-                {
-                    var resourceNames = assembly.GetManifestResourceNames()
-                        .Where(res => res.StartsWith(dataPrefix))
-                        .OrderBy(i => i);
-
-                    var csvFiles = resourceNames
-                        .Select(assembly.GetManifestResourceStream)
-                        .Select(ReadFully)
-                        .Select(DecompressToString);
-
-                    var rows = from file in csvFiles
-                               select CsvFileToRows(file);
-
-                    return rows
-                        .ToObservable()
-                        .Subscribe(o);
-                });
+            ExecutingAsssembly = Assembly.GetExecutingAssembly();
+            DataPrefix = $"{ExecutingAsssembly.GetName().Name}.Data.DailyCompounded_PaidWeekly";
         }
 
         private static IEnumerable<Row> CsvFileToRows(string content)
@@ -56,9 +34,21 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Repository
                    select Row.New(line);
         }
 
-        public IObservable<IEnumerable<Row>> MinimumPayments
+        public IEnumerable<Row> MinimumPayments()
         {
-            get { return _minimumPayments; }
+            var resourceNames = ExecutingAsssembly.GetManifestResourceNames()
+                        .Where(res => res.StartsWith(DataPrefix))
+                        .OrderBy(i => i);
+
+            var csvFiles = resourceNames
+                .Select(ExecutingAsssembly.GetManifestResourceStream)
+                .Select(ReadFully)
+                .Select(DecompressToString);
+
+            var pages = from file in csvFiles
+                       select CsvFileToRows(file);
+
+            return pages.SelectMany(page=>page);
         }
 
         private static byte[] ReadFully(Stream input)

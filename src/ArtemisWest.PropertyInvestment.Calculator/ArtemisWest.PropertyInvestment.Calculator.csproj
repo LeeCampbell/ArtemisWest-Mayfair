@@ -127,9 +127,11 @@
     <Compile Include="Entities\Transaction.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="Repository\DailyCompoundedPaidWeeklyDataLoader.cs" />
+    <Compile Include="Repository\Entities\MortgageRates.cs" />
     <Compile Include="Repository\IDailyCompoundedMortgageRepository.cs" />
     <Compile Include="Repository\DailyCompoundedMortgageRepository.cs" />
     <Compile Include="Repository\Entities\Row.cs" />
+    <Compile Include="Repository\Entities\IMortgageRates.cs" />
     <Compile Include="Timer.cs" />
     <Compile Include="UI\Charts\ChartRegions.xaml.cs">
       <DependentUpon>ChartRegions.xaml</DependentUpon>

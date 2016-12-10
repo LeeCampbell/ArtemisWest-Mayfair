@@ -8,6 +8,8 @@ using ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculation;
 using ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Input;
 using Unit = System.Reactive.Unit;
 using System.Reactive.Disposables;
+using System.Runtime.CompilerServices;
+using ArtemisWest.PropertyInvestment.Calculator.Repository.Entities;
 
 namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
 {
@@ -16,14 +18,18 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
     //  So maybe this could have the flag to apply excess to loan or not.
     //  Then decorate it with a "SavingsAccount" which applies interest to a net cash balance.
     //  However, maybe we should always pay down as much as we can? hmmmm
-    public class RentalPropertyViewModel : IDisposable
+    public class RentalPropertyViewModel : IViewModelStatus, IDisposable
     {
         private const int TermInDays = 10958;   //365.25 * 30;
         private readonly IDailyCompoundedMortgageRepository _mortgageRepository;
         private readonly ISchedulerProvider _schedulerProvider;
 
+        private readonly SingleAssignmentDisposable _rateLoadSubscription = new SingleAssignmentDisposable();
         private readonly SerialDisposable _currentEvaluation = new SerialDisposable();
         private readonly IDisposable _inputChangeSubscription;
+
+        private IMortgageRates _mortgageRates;
+        private ViewModelState _status;
 
         public RentalPropertyViewModel(IDailyCompoundedMortgageRepository mortgageRepository, ISchedulerProvider schedulerProvider)
         {
@@ -33,8 +39,21 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
             BindInputTitleToCharts();
 
             _inputChangeSubscription = SubscribeToInputChanges();
+            Status = ViewModelState.Idle;
+        }
 
-            _mortgageRepository.Load();
+
+        public ViewModelState Status
+        {
+            get { return _status; }
+            private set
+            {
+                if (_status != value)
+                {
+                    _status = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public RentalPropertyInputViewModel Input { get; } = new RentalPropertyInputViewModel();
@@ -57,10 +76,25 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
 
         public CalculationViewModel MonthlyExpenses { get; } = new CalculationViewModel(TermInDays);
 
+        public void Load()
+        {
+            Status = ViewModelState.Busy;
+            _rateLoadSubscription.Disposable = _mortgageRepository.Load()
+                .SubscribeOn(_schedulerProvider.TaskPool)
+                .ObserveOn(_schedulerProvider.Dispatcher)
+                .Subscribe(mr =>
+                {
+                    _mortgageRates = mr;
+                    Status = ViewModelState.Idle;
+                    Reevaluate();
+                });
+        }
+
         #region Implementation of IDisposable
 
         public void Dispose()
         {
+            _rateLoadSubscription.Dispose();
             _inputChangeSubscription.Dispose();
             _currentEvaluation.Dispose();
         }
@@ -80,7 +114,8 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                 return 0m;
             }
             decimal term = termInDays / 365.25m;
-            var absoluteMin = _mortgageRepository.GetMinimumMonthlyPayment(principal, term, interestRate);
+
+            var absoluteMin = _mortgageRates.GetMinimumMonthlyPayment(principal, term, interestRate);
             return Math.Round(absoluteMin, 2, MidpointRounding.AwayFromZero);
         }
 
@@ -95,9 +130,6 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
             var propertyChanges = inputPropertyChanges.Where(e => e.EventArgs.PropertyName != "Title");
 
             return propertyChanges
-                .CombineLatest(_mortgageRepository.MinimumRate, IgnoreValues)
-                .CombineLatest(_mortgageRepository.MaximumRate, IgnoreValues)
-                .CombineLatest(_mortgageRepository.IsLoaded, IgnoreValues)
                 .Subscribe(_ => Reevaluate());
         }
 
@@ -111,11 +143,15 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
             Debug.WriteLine("  UpdateValues()");
 
             SetChartsAsDirty();
+            //We haven't finished loading yet.
+            if (_mortgageRates == null)
+                return Disposable.Empty;
+
             return Observable.Create<Accumulator>(o =>
             {
                 //Check if the Rate is within the Loaded range
                 var annualInterestRate = Input.LoanInterestRate;
-                if (!IsRateValid(annualInterestRate))
+                if (!_mortgageRates.IsRateValid(annualInterestRate))
                 {
                     return Disposable.Empty;
                 }
@@ -176,18 +212,6 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
             () => Debug.WriteLine("UpdateValues Completed."));
         }
 
-        private bool IsRateValid(decimal annualInterestRate)
-        {
-            var minimumRate = _mortgageRepository.MinimumRate.First();
-            var maximumRate = _mortgageRepository.MaximumRate.First();
-
-            if (annualInterestRate < minimumRate || maximumRate < annualInterestRate)
-            {
-                Debug.WriteLine("    --Short circuit. {0} {1} {2} ", minimumRate, annualInterestRate, maximumRate);
-                return false;
-            }
-            return true;
-        }
 
         private void SetChartsAsDirty()
         {
@@ -298,6 +322,13 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                     GrossCashflowExpenses = GrossCashflowExpenses,
                 };
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
