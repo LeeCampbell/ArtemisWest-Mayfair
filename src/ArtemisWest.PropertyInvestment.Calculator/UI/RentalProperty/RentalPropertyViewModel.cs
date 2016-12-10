@@ -80,8 +80,8 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
         {
             Status = ViewModelState.Busy;
             _rateLoadSubscription.Disposable = _mortgageRepository.Load()
-                .SubscribeOn(_schedulerProvider.TaskPool)
-                .ObserveOn(_schedulerProvider.Dispatcher)
+                .SubscribeOn(_schedulerProvider.Background)
+                .ObserveOn(_schedulerProvider.Foreground)
                 .Subscribe(mr =>
                 {
                     _mortgageRates = mr;
@@ -189,9 +189,9 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty
                          }
                     ).Subscribe(o);
             })
-            .Buffer(50.Milliseconds(), 1000, _schedulerProvider.ThreadPool) //Every 50ms or every 1000 events, which ever is more often.
-            .SubscribeOn(_schedulerProvider.ThreadPool)
-            .ObserveOn(_schedulerProvider.Dispatcher)
+            .Buffer(50.Milliseconds(), 1000, _schedulerProvider.Background) //Every 50ms or every 1000 events, which ever is more often.
+            .SubscribeOn(_schedulerProvider.Background)
+            .ObserveOn(_schedulerProvider.Foreground)
             .Subscribe(snapshots =>
             {
                 Debug.WriteLine("Received {0} in batch", snapshots.Count);

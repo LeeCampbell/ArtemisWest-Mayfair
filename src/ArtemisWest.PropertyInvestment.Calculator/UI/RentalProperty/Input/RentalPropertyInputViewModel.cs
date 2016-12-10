@@ -1,91 +1,49 @@
-﻿using Microsoft.Practices.Prism.ViewModel;
+﻿using Microsoft.Practices.Prism.Mvvm;
 
 namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Input
 {
-    public class RentalPropertyInputViewModel : NotificationObject
+    public class RentalPropertyInputViewModel : BindableBase
     {
         private decimal _initialCapitalValue;
         public decimal InitialCapitalValue
         {
             get { return _initialCapitalValue; }
-            set
-            {
-                if (_initialCapitalValue != value)
-                {
-                    _initialCapitalValue = value;
-                    RaisePropertyChanged(() => InitialCapitalValue);
-                }
-            }
+            set { SetProperty(ref _initialCapitalValue, value); }
         }
 
         private decimal _initialLoanAmount;
         public decimal InitialLoanAmount
         {
             get { return _initialLoanAmount; }
-            set
-            {
-                if (_initialLoanAmount != value)
-                {
-                    _initialLoanAmount = value;
-                    RaisePropertyChanged(() => InitialLoanAmount);
-                }
-            }
+            set { SetProperty(ref _initialLoanAmount, value); }
         }
 
         private decimal _loanInterestRate;
         public decimal LoanInterestRate
         {
             get { return _loanInterestRate; }
-            set
-            {
-                if (_loanInterestRate != value)
-                {
-                    _loanInterestRate = value;
-                    RaisePropertyChanged(() => LoanInterestRate);
-                }
-            }
+            set { SetProperty(ref _loanInterestRate, value); }
         }
 
         private decimal _captialGrowth;
         public decimal CaptialGrowth
         {
             get { return _captialGrowth; }
-            set
-            {
-                if (_captialGrowth != value)
-                {
-                    _captialGrowth = value;
-                    RaisePropertyChanged(() => CaptialGrowth);
-                }
-            }
+            set { SetProperty(ref _captialGrowth, value); }
         }
 
         private decimal _weeklyRentalIncome;
         public decimal WeeklyRentalIncome
         {
             get { return _weeklyRentalIncome; }
-            set
-            {
-                if (_weeklyRentalIncome != value)
-                {
-                    _weeklyRentalIncome = value;
-                    RaisePropertyChanged(() => WeeklyRentalIncome);
-                }
-            }
+            set { SetProperty(ref _weeklyRentalIncome, value); }
         }
 
         private string _title;
         public string Title
         {
             get { return _title; }
-            set
-            {
-                if (_title != value)
-                {
-                    _title = value;
-                    RaisePropertyChanged(() => Title);
-                }
-            }
+            set { SetProperty(ref _title, value); }
         }
         //TODO: Add loan term. Changes to this would obviously need to correct the length of the Balances collections. There4 they could not be arrays anymore.
 
