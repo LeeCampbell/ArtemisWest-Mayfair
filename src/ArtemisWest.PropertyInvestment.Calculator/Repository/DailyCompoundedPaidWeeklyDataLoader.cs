@@ -37,18 +37,15 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Repository
         public IEnumerable<Row> MinimumPayments()
         {
             var resourceNames = ExecutingAsssembly.GetManifestResourceNames()
-                        .Where(res => res.StartsWith(DataPrefix))
-                        .OrderBy(i => i);
+                .Where(res => res.StartsWith(DataPrefix))
+                .OrderBy(i => i);
 
-            var csvFiles = resourceNames
+            var csvFiles = resourceNames.AsParallel()
                 .Select(ExecutingAsssembly.GetManifestResourceStream)
                 .Select(ReadFully)
                 .Select(DecompressToString);
 
-            var pages = from file in csvFiles
-                       select CsvFileToRows(file);
-
-            return pages.SelectMany(page=>page);
+            return csvFiles.SelectMany(CsvFileToRows);
         }
 
         private static byte[] ReadFully(Stream input)

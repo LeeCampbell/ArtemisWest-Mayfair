@@ -18,7 +18,8 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Repository
                 {
                     var dailyCompoundedPaidWeekly = new DailyCompoundedPaidWeeklyDataLoader();
                     var paymentRates = dailyCompoundedPaidWeekly.MinimumPayments();
-                    o.OnNext(new MortgageRates(paymentRates));
+                    var rates = new MortgageRates(paymentRates);
+                    o.OnNext(rates);
                     return Disposable.Empty;
                 })
                 .Replay(1)
@@ -31,7 +32,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.Repository
         }
     }
 
-    
+
     public static class ObservableExtensions
     {
         public static IObservable<T> LazyConnect<T>(this IConnectableObservable<T> source, SingleAssignmentDisposable connection)
