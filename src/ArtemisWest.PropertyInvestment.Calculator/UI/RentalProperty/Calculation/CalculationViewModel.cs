@@ -1,13 +1,11 @@
 ﻿using System;
 using ArtemisWest.PropertyInvestment.Calculator.Entities;
-using Microsoft.Practices.Prism.ViewModel;
+using Microsoft.Practices.Prism.Mvvm;
 
 namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculation
 {
-    public sealed class CalculationViewModel : NotificationObject
+    public sealed class CalculationViewModel : BindableBase
     {
-        private readonly int _termInDays;
-        private readonly PositionViewModel[] _resultOverTime;
         private string _title;
         private bool _isDirty;
 
@@ -18,32 +16,25 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculatio
 
         public CalculationViewModel(int termInDays, DateTime startDate)
         {
-            _termInDays = termInDays;
-            _resultOverTime = new PositionViewModel[_termInDays];
+            var termInDays1 = termInDays;
+            ResultOverTime = new PositionViewModel[termInDays1];
 
             var currentDate = startDate;
-            for (var i = 0; i < _termInDays; i++)
+            for (var i = 0; i < termInDays1; i++)
             {
-                _resultOverTime[i] = new PositionViewModel(currentDate);
+                ResultOverTime[i] = new PositionViewModel(currentDate);
                 currentDate = currentDate.AddDays(1);
             }
         }
 
-        public PositionViewModel[] ResultOverTime
-        {
-            get { return _resultOverTime; }
-        }
+        public PositionViewModel[] ResultOverTime { get; }
 
         public string Title
         {
             get { return _title; }
             private set
             {
-                if (_title != value)
-                {
-                    _title = value;
-                    RaisePropertyChanged(() => Title);
-                }
+                SetProperty(ref _title, value);
             }
         }
 
@@ -58,11 +49,7 @@ namespace ArtemisWest.PropertyInvestment.Calculator.UI.RentalProperty.Calculatio
             get { return _isDirty; }
             set
             {
-                if (_isDirty != value)
-                {
-                    _isDirty = value;
-                    RaisePropertyChanged(() => IsDirty);
-                }
+                SetProperty(ref _isDirty, value);
             }
         }
     }

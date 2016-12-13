@@ -1,31 +1,31 @@
 ﻿using System;
-using System.Windows.Controls.DataVisualization.Charting;
+using System.Windows.Controls;
 using Microsoft.Practices.Prism.Regions;
 
 namespace ArtemisWest.Mayfair.Shell.Controls
 {
-    public sealed class ChartRegionAdapter : RegionAdapterBase<Chart>
+    public sealed class ProgressBarRegionAdapter : RegionAdapterBase<ProgressBar>
     {
-        public ChartRegionAdapter(IRegionBehaviorFactory regionBehaviorFactory)
+        public ProgressBarRegionAdapter(IRegionBehaviorFactory regionBehaviorFactory)
             : base(regionBehaviorFactory)
         {
         }
 
         #region Overrides of RegionAdapterBase<Chart>
 
-        protected override void AttachBehaviors(IRegion region, Chart regionTarget)
+        protected override void AttachBehaviors(IRegion region, ProgressBar regionTarget)
         {
             if (region == null)
             {
                 throw new ArgumentNullException("region");
             }
-            var regionBehavior = new ChartSeriesSyncBehavior { HostControl = regionTarget };
-            region.Behaviors.Add(ChartSeriesSyncBehavior.BehaviorKey, regionBehavior);
+            var regionBehavior = new ProgressBarSyncBehavior { HostControl = regionTarget };
+            region.Behaviors.Add(ProgressBarSyncBehavior.BehaviorKey, regionBehavior);
             base.AttachBehaviors(region, regionTarget);
 
         }
 
-        protected override void Adapt(IRegion region, Chart regionTarget)
+        protected override void Adapt(IRegion region, ProgressBar regionTarget)
         {
         }
 

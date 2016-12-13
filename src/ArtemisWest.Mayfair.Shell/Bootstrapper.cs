@@ -1,7 +1,11 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using ArtemisWest.Mayfair.Infrastructure;
+using ArtemisWest.Mayfair.Shell.Controls;
 using ArtemisWest.PropertyInvestment.Calculator;
+using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.Prism.UnityExtensions;
+using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 
 namespace ArtemisWest.Mayfair.Shell
@@ -13,6 +17,13 @@ namespace ArtemisWest.Mayfair.Shell
         protected override DependencyObject CreateShell()
         {
             return new Shell();
+        }
+
+        protected override RegionAdapterMappings ConfigureRegionAdapterMappings()
+        {
+            var mappings = base.ConfigureRegionAdapterMappings();
+            mappings.RegisterMapping(typeof(ProgressBar), ServiceLocator.Current.GetInstance<ProgressBarRegionAdapter>());
+            return mappings;
         }
 
         protected override void InitializeShell()

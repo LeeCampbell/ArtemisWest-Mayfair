@@ -5,25 +5,44 @@
         xmlns:regions="http://www.codeplex.com/CompositeWPF"
         Title="Mayfair" 
         Style="{StaticResource WindowStyle}">
-    <DockPanel LastChildFill="True" Margin="80, 36, 36, 36">
-        <TextBlock DockPanel.Dock="Top"
+    <Control.Resources>
+        <Style x:Key="FooterBar" TargetType="DockPanel">
+            <Setter Property="Background" Value="#88000000"/>
+            <Setter Property="Height" Value="30"/>
+
+        </Style>
+    </Control.Resources>
+    <DockPanel>
+        <DockPanel x:Name="Footer"
+                   DockPanel.Dock="Bottom"
+                   Style="{StaticResource FooterBar}">
+            <ProgressBar x:Name="ViewModelLoadingProgress"
+                         regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.ViewModelProgressRegion}"
+                         HorizontalAlignment="Right"
+                         Margin="5"
+                         IsIndeterminate="True"
+                         Width="150"/>
+        </DockPanel>
+        <DockPanel LastChildFill="True" Margin="80, 36, 36, 36">
+            <TextBlock DockPanel.Dock="Top"
                    Text="Mayfair"
                    Style="{StaticResource Title}" />
 
-        <ItemsControl x:Name="InputPanel" 
+            <ItemsControl x:Name="InputPanel" 
                       DockPanel.Dock="Left" 
                       regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.MainInputRegion}">
-            <ItemsControl.ItemContainerStyle>
-                <Style>
-                    <Setter Property="Control.Margin" Value="0,0,15,15"/>
-                </Style>
-            </ItemsControl.ItemContainerStyle>
-        </ItemsControl>
+                <ItemsControl.ItemContainerStyle>
+                    <Style>
+                        <Setter Property="Control.Margin" Value="0,0,15,15"/>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
 
-        <!-- Add the toolbar to be able set up the workspace as you like (ie buttons that set the Uniform Grid's Rows/Cols etc... -->
-        <ContentControl x:Name="ChartsPanel"
+
+            <!-- Add the toolbar to be able set up the workspace as you like (ie buttons that set the Uniform Grid's Rows/Cols etc... -->
+            <ContentControl x:Name="ChartsPanel"
                         Margin="0,-48,0,0"
                         regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.MainChartRegion}"/>
+        </DockPanel>
     </DockPanel>
-
 </Window>
